@@ -437,7 +437,7 @@ export default function BookPage() {
 
                 selected={selectedDate}
 
-                onChange={(date)=>{
+                onChange={(date: Date | null)=>{
 
                   setSelectedDate(date);
 
