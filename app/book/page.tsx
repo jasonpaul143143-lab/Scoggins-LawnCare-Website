@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import emailjs from "@emailjs/browser";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -15,7 +15,23 @@ export default function BookPage() {
 
   const [selectedTime, setSelectedTime] = useState("");
 
+  const [seletctedServices, setSelectedServices] = useState<string[]>([]);
 
+  const [showedBundlePopup, setShowBundlePopup] = useState(false);
+
+const [estimatedPrice, setEstimatedPrice] = useState(0);
+
+  const [selectedPackage, setSelectedPackage] = useState("");
+
+  const [suggestedPackage, setSuggestedPackage] = useState("");
+
+  const [yardSize, setYardSize] = useState("");
+
+  const [notes, setNotes] = useState("");
+
+useEffect(() => {
+  calculatePrice();
+}, [selectedPackage, yardSize, seletctedServices]);
 
 
   const services = [
@@ -246,7 +262,108 @@ export default function BookPage() {
 
 
 
+function checkForBundle(serviceList: string[]) {
 
+  const packages = [
+    {
+      name: "Basic",
+      services: [
+        "Lawn Mowing",
+        "Edging",
+        "Weed Eating",
+        "Blowing"
+      ]
+    },
+    {
+      name: "Full Service",
+      services: [
+        "Lawn Mowing",
+        "Edging",
+        "Weed Eating",
+        "Blowing",
+        "Cleanup",
+        "Grass Clipping Removal",
+        "Extra Detail Work"
+      ]
+    },
+    {
+      name: "Premium",
+      services: [
+        "Lawn Mowing",
+        "Edging",
+        "Weed Eating",
+        "Blowing",
+        "Cleanup",
+        "Grass Clipping Removal",
+        "Extra Detail Work",
+        "Bush Trimming",
+        "Yard Cleanup"
+      ]
+    }
+  ];
+
+
+  const matchingPackage = packages.find(pkg =>
+    pkg.services.every(service =>
+      serviceList.includes(service)
+    )
+  );
+
+
+  if (matchingPackage) {
+    setShowBundlePopup(true);
+    setSuggestedPackage(matchingPackage.name);
+  }
+
+}
+
+function calculatePrice() {
+
+  let price = 0;
+
+
+  if (selectedPackage === "Basic") {
+    price += 35;
+  }
+
+  if (selectedPackage === "Full Service") {
+    price += 75;
+  }
+
+  if (selectedPackage === "Premium") {
+    price += 100;
+  }
+
+
+  if (!selectedPackage) {
+
+    if (seletctedServices.length > 0) {
+      price += 35;
+    }
+
+  }
+
+
+  if (yardSize === "Small") {
+    price = Math.max(price, 35);
+  }
+
+  if (yardSize === "Medium") {
+    price = Math.max(price, 45);
+  }
+
+  if (yardSize === "Large") {
+    price = Math.max(price, 60);
+  }
+
+  if (yardSize === "Extra Large") {
+    price = Math.max(price, 80);
+  }
+
+
+  setEstimatedPrice(price);
+
+}
 
   return (
 
@@ -254,6 +371,7 @@ export default function BookPage() {
 
 
       <div className="max-w-3xl mx-auto">
+        
 
 
 
@@ -567,6 +685,7 @@ export default function BookPage() {
 
                   className="border p-3 rounded-xl"
 
+
                 >
 
 
@@ -579,6 +698,25 @@ export default function BookPage() {
                     value={service}
 
                     className="mr-2"
+
+                    checked={seletctedServices.includes(service)}
+
+                    onChange={(e)=>{
+    let updatedServices;
+    if(e.target.checked){
+      updatedServices = [
+        ...seletctedServices,
+        service
+      ];
+    } else {
+      updatedServices =
+        seletctedServices.filter(
+          item => item !== service
+        );
+    }
+    setSelectedServices(updatedServices);
+    checkForBundle(updatedServices);
+  }}
 
                   />
 
@@ -643,6 +781,9 @@ export default function BookPage() {
 
                     className="mr-2"
 
+checked={selectedPackage === pkg.name}
+
+                    onChange={() => setSelectedPackage(pkg.name)}
                   />
 
 
@@ -762,6 +903,18 @@ export default function BookPage() {
 
           {/* Submit */}
 
+<div className="bg-green-100 p-4 rounded-xl">
+
+<h2 className="font-bold text-lg">
+Estimated Starting Price
+</h2>
+
+<p className="text-3xl font-bold">
+${estimatedPrice}
+</p>
+
+</div>
+
 
           <button
 
@@ -876,10 +1029,50 @@ export default function BookPage() {
 
       </div>
 
+{showedBundlePopup && (
+  <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-5">
 
-    </main>
+    <div className="bg-white rounded-xl p-6 max-w-md">
 
-  );
+      <h2 className="text-xl font-bold">
+        Save Time & Money? 🌱
+      </h2>
 
+      <p>
+        These services match one of our packages.
+        Would you like the bundle instead?
+      </p>
 
+      <div className="flex gap-3">
+
+        <button
+          type="button"
+          onClick={() => {
+            setSelectedServices([]);
+
+            setSelectedPackage(suggestedPackage);
+
+            setShowBundlePopup(false);
+        
+          }} 
+            >
+          Yes, choose bundle
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setShowBundlePopup(false)}
+        >
+          No thanks
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+)}
+</main>
+);
 }
+
