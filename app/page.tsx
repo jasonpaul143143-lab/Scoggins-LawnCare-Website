@@ -1,5 +1,7 @@
 "use client";
 
+import LawnQuiz from "@/components/LawnQuiz";
+
 import Link from "next/link";
 
 export default function Home() {
@@ -68,58 +70,113 @@ export default function Home() {
 
     <main className="bg-white text-black">
 
+{/* SERVICES */}
 
-      {/* HERO */}
+<section className="min-h-screen flex flex-col items-center justify-center text-center bg-green-900 text-white px-6">
 
-      <section className="bg-gradient-to-r from-green-800 to-green-600 text-white px-8 py-24 text-center">
+  <h1 className="text-5xl md:text-7xl font-bold">
+    Scoggins LawnCare
+  </h1>
 
+  <p className="mt-6 text-xl max-w-xl">
+    Professional lawn care that keeps your yard looking its best.
+  </p>
 
-        <h1 className="text-6xl font-bold">
-          Scoggins LawnCare 🌱
-        </h1>
+  <div className="mt-8 flex gap-4">
 
-
-        <p className="text-2xl mt-5">
-          Professional Lawn Care You Can Count On
-        </p>
-
-
-        <p className="mt-4 text-lg">
-          Serving Kannapolis, Granite Quarry & Salisbury
-        </p>
-
-
-        <div className="mt-8 flex justify-center gap-4 flex-wrap">
+    <a
+      href="/book"
+      className="bg-green-500 hover:bg-green-400 px-8 py-4 rounded-full font-bold transition"
+    >
+      🌱 Book Now
+    </a>
 
 
-          <Link href="/book">
+    <a
+      href="tel:7042736210"
+      className="border border-white px-8 py-4 rounded-full font-bold hover:bg-white hover:text-green-900 transition"
+    >
+      📞 Call Us
+    </a>
 
-            <button className="bg-white text-green-700 px-8 py-4 rounded-xl font-bold">
+  </div>
 
-              Book Now
-
-            </button>
-
-          </Link>
-
-
-          <a href="#services">
-
-            <button className="border border-white px-8 py-4 rounded-xl font-bold">
-
-              View Services
-
-            </button>
-
-          </a>
+</section>
 
 
-        </div>
 
 
-      </section>
+      
+<LawnQuiz />
+
+<section className="py-20 bg-green-50">
+
+<h2 className="text-4xl font-bold text-center text-green-900">
+Why Choose Us?
+</h2>
 
 
+<div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-8 max-w-5xl mx-auto">
+
+
+<div className="bg-white rounded-full h-40 w-40 mx-auto shadow-lg flex flex-col items-center justify-center hover:scale-110 transition">
+
+<span className="text-4xl">
+⭐
+</span>
+
+<p className="font-bold text-center">
+Quality Results
+</p>
+
+</div>
+
+
+
+<div className="bg-white rounded-full h-40 w-40 mx-auto shadow-lg flex flex-col items-center justify-center hover:scale-110 transition">
+
+<span className="text-4xl">
+⏰
+</span>
+
+<p className="font-bold text-center">
+Reliable Service
+</p>
+
+</div>
+
+
+
+<div className="bg-white rounded-full h-40 w-40 mx-auto shadow-lg flex flex-col items-center justify-center hover:scale-110 transition">
+
+<span className="text-4xl">
+💲
+</span>
+
+<p className="font-bold text-center">
+Fair Pricing
+</p>
+
+</div>
+
+
+
+<div className="bg-white rounded-full h-40 w-40 mx-auto shadow-lg flex flex-col items-center justify-center hover:scale-110 transition">
+
+<span className="text-4xl">
+📍
+</span>
+
+<p className="font-bold text-center">
+Local Business
+</p>
+
+</div>
+
+
+</div>
+
+</section>
 
 
 

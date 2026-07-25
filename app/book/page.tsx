@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import emailjs from "@emailjs/browser";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-
+import { supabase } from "@/lib/supabase";
 
 export default function BookPage() {
 
@@ -15,7 +15,7 @@ export default function BookPage() {
 
   const [selectedTime, setSelectedTime] = useState("");
 
-  const [seletctedServices, setSelectedServices] = useState<string[]>([]);
+  const [selectedServices, setSelectedServices] = useState<string[]>([]);
 
   const [showedBundlePopup, setShowBundlePopup] = useState(false);
 
@@ -31,7 +31,7 @@ const [estimatedPrice, setEstimatedPrice] = useState(0);
 
 useEffect(() => {
   calculatePrice();
-}, [selectedPackage, yardSize, seletctedServices]);
+}, [selectedPackage, yardSize, selectedServices]);
 
 
   const services = [
@@ -222,9 +222,11 @@ useEffect(() => {
 
   }
  function sendEmail(e: React.FormEvent<HTMLFormElement>) {
+  
 
     e.preventDefault();
 
+    const form = e.currentTarget;
 
     emailjs
       .sendForm(
@@ -233,7 +235,7 @@ useEffect(() => {
 
         "template_97ofatk",
 
-        e.currentTarget,
+        form,
 
         {
           publicKey: "PXndUTbCoWKnu2PEk",
@@ -241,17 +243,46 @@ useEffect(() => {
 
       )
 
-      .then(() => {
+     .then(async () => {
 
-        alert("Booking request sent successfully! 🌱");
 
-      })
+  const formData = new FormData(form);
+
+
+const result = await supabase
+  .from("bookings")
+  .insert({
+    name: formData.get("name")?.toString() || "",
+    phone: formData.get("phone")?.toString() || "",
+    email: formData.get("email")?.toString() || "",
+    area: area,
+    date: selectedDate?.toLocaleDateString() || "",
+    time: selectedTime,
+    services: selectedServices.join(", "),
+    package: selectedPackage,
+    yard_size: yardSize,
+    notes: formData.get("message")?.toString() || "",
+    price: estimatedPrice,
+    status: "Pending"
+  });
+
+
+if (result.error) {
+  throw result.error;
+}
+
+
+
+  alert("Booking request sent successfully! 🌱");
+
+
+})
 
       .catch((error) => {
 
-        console.log(error);
+        console.error("ERROR:", error);
 
-        alert("Something went wrong. Please try again.");
+        alert(error.message);
 
       });
 
@@ -337,7 +368,7 @@ function calculatePrice() {
 
   if (!selectedPackage) {
 
-    if (seletctedServices.length > 0) {
+    if (selectedServices.length > 0) {
       price += 35;
     }
 
@@ -410,10 +441,8 @@ function calculatePrice() {
         : ""
     }
   />
-  <input
-    name="name"
-    placeholder="Full Name"
-/>
+ 
+
 
 
 
@@ -699,19 +728,19 @@ function calculatePrice() {
 
                     className="mr-2"
 
-                    checked={seletctedServices.includes(service)}
+                    checked={selectedServices.includes(service)}
 
                     onChange={(e)=>{
     let updatedServices;
     if(e.target.checked){
       updatedServices = [
-        ...seletctedServices,
+        ...selectedServices,
         service
       ];
     } else {
       updatedServices =
-        seletctedServices.filter(
-          item => item !== service
+        selectedServices.filter(
+          (item: string) => item !== service
         );
     }
     setSelectedServices(updatedServices);
@@ -836,14 +865,13 @@ checked={selectedPackage === pkg.name}
 
 
             <select
+  className="border p-3 rounded-xl w-full mt-2"
+  name="yardSize"
+  value={yardSize}
+  onChange={(e)=>setYardSize(e.target.value)}
+  required
+>
 
-              className="border p-3 rounded-xl w-full mt-2"
-
-              name="yardSize"
-
-              required
-
-            >
 
 
               <option value="">
