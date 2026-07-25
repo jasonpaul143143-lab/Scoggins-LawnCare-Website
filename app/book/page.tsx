@@ -1,12 +1,22 @@
 "use client";
 
 import { useState } from "react";
+import emailjs from "@emailjs/browser";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+
 
 export default function BookPage() {
 
+
   const [area, setArea] = useState("");
-  const [selectedDate, setSelectedDate] = useState("");
+
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+
   const [selectedTime, setSelectedTime] = useState("");
+
+
+
 
   const services = [
     "Lawn Mowing",
@@ -19,28 +29,32 @@ export default function BookPage() {
   ];
 
 
+
+
   const packages = [
     {
       name: "Basic",
-      price: "$35",
+      price: "$35+",
       description:
         "Mowing, Edging, Weed Eating, Blowing",
     },
 
     {
       name: "Full Service",
-      price: "$75",
+      price: "$75+",
       description:
         "Everything in Basic, Cleanup, Grass Clipping Removal, Extra Detail Work",
     },
 
     {
       name: "Premium",
-      price: "$100",
+      price: "$100+",
       description:
         "Full Service, Detailed Bush Trimming, Yard Cleanup",
     },
   ];
+
+
 
 
   const yardSizes = [
@@ -66,183 +80,328 @@ export default function BookPage() {
   ];
 
 
-  function getTimes() {
 
-    if (area === "Kannapolis") {
-      return [
-        "10:00 AM",
-        "11:00 AM",
-        "12:00 PM",
-        "1:00 PM",
-        "2:00 PM",
-        "3:00 PM",
-        "4:00 PM",
-        "5:00 PM",
-      ];
+
+
+ function getTimes() {
+
+  let times = [];
+
+  let startHour = 0;
+  let endHour = 0;
+
+
+  // Kannapolis: 10 AM - 5 PM
+  if (area === "Kannapolis") {
+    startHour = 10;
+    endHour = 17;
+  }
+
+
+  // Granite Quarry + Salisbury: 4 PM - 8 PM
+  if (
+    area === "Granite Quarry" ||
+    area === "Salisbury"
+  ) {
+    startHour = 16;
+    endHour = 20;
+  }
+
+
+
+  for (
+    let hour = startHour;
+    hour <= endHour;
+    hour++
+  ) {
+
+    for (
+      let minute = 0;
+      minute < 60;
+      minute += 5
+    ) {
+
+
+      // Don't go past closing time
+      if (
+        hour === endHour &&
+        minute > 0
+      ) {
+        break;
+      }
+
+
+      const formattedHour =
+        hour > 12 ? hour - 12 : hour;
+
+
+      const ampm =
+        hour >= 12 ? "PM" : "AM";
+
+
+      const formattedMinute =
+        minute.toString().padStart(2, "0");
+
+
+      times.push(
+        `${formattedHour}:${formattedMinute} ${ampm}`
+      );
+
     }
 
+  }
+
+
+  return times;
+
+}
+
+
+
+
+
+
+  function isDateAvailable(date: Date) {
+
+
+    const day = date.getDay();
+
+
+
+    // Sunday = no work
+
+    if (day === 0) {
+
+      return false;
+
+    }
+
+
+
+    // Kannapolis = Saturday only
+
+    if (area === "Kannapolis") {
+
+      return day === 6;
+
+    }
+
+
+
+
+    // Granite Quarry + Salisbury = Monday-Friday
 
     if (
       area === "Granite Quarry" ||
       area === "Salisbury"
     ) {
 
-      return [
-        "4:00 PM",
-        "5:00 PM",
-        "6:00 PM",
-        "7:00 PM",
-        "8:00 PM",
-      ];
+      return day >= 1 && day <= 5;
 
     }
 
 
-    return [];
+
+    return false;
+
+  }
+ function sendEmail(e: React.FormEvent<HTMLFormElement>) {
+
+    e.preventDefault();
+
+
+    emailjs
+      .sendForm(
+
+        "service_lg6901v",
+
+        "template_97ofatk",
+
+        e.currentTarget,
+
+        {
+          publicKey: "PXndUTbCoWKnu2PEk",
+        }
+
+      )
+
+      .then(() => {
+
+        alert("Booking request sent successfully! 🌱");
+
+      })
+
+      .catch((error) => {
+
+        console.log(error);
+
+        alert("Something went wrong. Please try again.");
+
+      });
+
 
   }
 
 
-  function checkDate(date:string) {
-
-    const day = new Date(date).getDay();
 
 
-    // Sunday
-    if(day === 0){
-      alert(
-        "Sunday is Planning Day. No work scheduled."
-      );
-
-      setSelectedDate("");
-      return;
-    }
 
 
-    // Kannapolis Saturday only
-    if(
-      area === "Kannapolis" &&
-      day !== 6
-    ){
 
-      alert(
-        "Kannapolis appointments are Saturday only."
-      );
-
-      setSelectedDate("");
-      return;
-
-    }
-
-
-    // GQ/Salisbury Monday-Friday
-    if(
-      (area === "Granite Quarry" ||
-      area === "Salisbury") &&
-      (day === 6 || day === 0)
-    ){
-
-      alert(
-        "Granite Quarry and Salisbury are Monday-Friday only."
-      );
-
-      setSelectedDate("");
-      return;
-
-    }
-
-
-    setSelectedDate(date);
-  }
- return (
+  return (
 
     <main className="min-h-screen bg-white text-black p-8">
+
 
       <div className="max-w-3xl mx-auto">
 
 
+
         <h1 className="text-4xl font-bold text-green-700 text-center">
+
           Book Scoggins LawnCare 🌱
+
         </h1>
 
 
+
         <p className="text-center mt-3">
-          Pick your service, location, and schedule.
+
+          Choose your service, location, date, and time.
+
         </p>
 
 
 
-        <form className="mt-8 space-y-6">
+
+
+        <form
+
+          className="mt-8 space-y-6"
+
+          onSubmit={sendEmail}
+
+        >
+
+
 
 
           {/* Customer Info */}
 
+
           <input
+
             className="border p-3 rounded-xl w-full"
-            placeholder="Full Name"
+
             name="name"
+
+            placeholder="Full Name"
+
             required
+
           />
 
 
+
           <input
+
             className="border p-3 rounded-xl w-full"
-            placeholder="Phone Number"
+
             name="phone"
+
+            placeholder="Phone Number"
+
             required
+
           />
+
 
 
           <input
+
             className="border p-3 rounded-xl w-full"
-            placeholder="Email"
+
             name="email"
+
             type="email"
+
+            placeholder="Email"
+
             required
+
           />
 
 
 
 
 
-          {/* Location */}
+
+
+          {/* Area */}
+
 
           <div>
 
+
             <label className="font-bold">
+
               Choose Your Area:
+
             </label>
 
 
+
             <select
+
               className="border p-3 rounded-xl w-full mt-2"
+
+              name="area"
+
               value={area}
-              onChange={(e)=> {
+
+              onChange={(e)=>{
+
                 setArea(e.target.value);
-                setSelectedDate("");
+
+                setSelectedDate(null);
+
                 setSelectedTime("");
+
               }}
 
               required
+
             >
 
+
               <option value="">
+
                 Select Area
+
               </option>
 
 
+
               <option>
+
                 Kannapolis
+
               </option>
 
 
+
               <option>
+
                 Granite Quarry
+
               </option>
 
 
+
               <option>
+
                 Salisbury
+
               </option>
 
 
@@ -255,7 +414,11 @@ export default function BookPage() {
 
 
 
+
+
+
           {/* Calendar */}
+
 
           {area && (
 
@@ -263,32 +426,37 @@ export default function BookPage() {
 
 
               <label className="font-bold">
-                Choose Date:
+
+                Choose Available Date:
+
               </label>
 
 
-              <input
 
-                type="date"
+              <DatePicker
+
+                selected={selectedDate}
+
+                onChange={(date)=>{
+
+                  setSelectedDate(date);
+
+                  setSelectedTime("");
+
+                }}
+
+                filterDate={isDateAvailable}
+
+                minDate={new Date()}
+
+                placeholderText="Select a date"
 
                 className="border p-3 rounded-xl w-full mt-2"
-
-                value={selectedDate}
-
-                onChange={(e)=>checkDate(e.target.value)}
 
                 required
 
               />
 
-
-              <p className="text-sm mt-2">
-
-                {area === "Kannapolis"
-                ? "Kannapolis: Saturdays 10 AM - 5 PM"
-                : "Granite Quarry/Salisbury: Monday-Friday 4 PM - 8 PM"}
-
-              </p>
 
 
             </div>
@@ -300,20 +468,28 @@ export default function BookPage() {
 
 
 
+
           {/* Time */}
+
 
           {selectedDate && (
 
             <div>
 
+
               <label className="font-bold">
+
                 Choose Time:
+
               </label>
+
 
 
               <select
 
                 className="border p-3 rounded-xl w-full mt-2"
+
+                name="time"
 
                 value={selectedTime}
 
@@ -323,16 +499,24 @@ export default function BookPage() {
 
               >
 
+
                 <option value="">
+
                   Select Time
+
                 </option>
+
 
 
                 {getTimes().map((time)=>(
 
+
                   <option key={time}>
+
                     {time}
+
                   </option>
+
 
                 ))}
 
@@ -343,21 +527,18 @@ export default function BookPage() {
             </div>
 
           )}
+         {/* Services */}
 
-
-
-
-
-
-
-          {/* Services */}
 
           <div>
 
 
             <label className="font-bold">
+
               Select Services:
+
             </label>
+
 
 
             <div className="grid md:grid-cols-2 gap-3 mt-3">
@@ -367,9 +548,13 @@ export default function BookPage() {
 
 
                 <label
+
                   key={service}
+
                   className="border p-3 rounded-xl"
+
                 >
+
 
                   <input
 
@@ -404,14 +589,19 @@ export default function BookPage() {
 
 
 
+
           {/* Packages */}
+
 
           <div>
 
 
             <label className="font-bold">
+
               Select Package:
+
             </label>
+
 
 
             <div className="space-y-3 mt-3">
@@ -421,9 +611,13 @@ export default function BookPage() {
 
 
                 <label
+
                   key={pkg.name}
+
                   className="block border p-4 rounded-xl"
+
                 >
+
 
                   <input
 
@@ -438,13 +632,19 @@ export default function BookPage() {
                   />
 
 
+
                   <strong>
-                    {pkg.name} - Starting at {pkg.price}
+
+                    {pkg.name} - {pkg.price}
+
                   </strong>
 
 
+
                   <p className="text-sm mt-1">
+
                     {pkg.description}
+
                   </p>
 
 
@@ -458,13 +658,26 @@ export default function BookPage() {
 
 
           </div>
-         {/* Yard Size */}
+
+
+
+
+
+
+
+
+          {/* Yard Size */}
+
 
           <div>
 
+
             <label className="font-bold">
+
               Choose Yard Size:
+
             </label>
+
 
 
             <select
@@ -477,18 +690,24 @@ export default function BookPage() {
 
             >
 
+
               <option value="">
+
                 Select Yard Size
+
               </option>
 
 
+
               {yardSizes.map((yard)=>(
+
 
                 <option key={yard.name}>
 
                   {yard.name} - {yard.price}
 
                 </option>
+
 
               ))}
 
@@ -504,7 +723,9 @@ export default function BookPage() {
 
 
 
+
           {/* Notes */}
+
 
           <textarea
 
@@ -524,7 +745,9 @@ export default function BookPage() {
 
 
 
+
           {/* Submit */}
+
 
           <button
 
@@ -549,7 +772,8 @@ export default function BookPage() {
 
 
 
-        {/* Hours */}
+        {/* Business Info */}
+
 
         <div className="mt-10 bg-green-100 p-6 rounded-xl">
 
@@ -561,18 +785,27 @@ export default function BookPage() {
           </h2>
 
 
-          <p className="mt-2">
-            Monday - Friday: 4 PM - 8 PM
+
+          <p>
+
+            Monday-Friday: 4 PM - 8 PM
+
           </p>
 
 
+
           <p>
+
             Saturday: 10 AM - 5 PM
+
           </p>
 
 
+
           <p>
+
             Sunday: Planning Day (No Work)
+
           </p>
 
 
@@ -582,25 +815,47 @@ export default function BookPage() {
 
 
 
-        <div className="mt-6 text-center">
 
-  <p>
-    📞 704-425-1685
-  </p>
 
-  <p>
-    📞 704-273-6210
-  </p>
 
-  <p>
-    📧 scogginslawncarenc@gmail.com
-  </p>
+        {/* Contact */}
 
-  <p className="mt-2">
-    Facebook | Instagram | TikTok | YouTube
-  </p>
 
-</div>
+        <div className="mt-8 text-center">
+
+
+          <p>
+
+            📞 704-425-1685
+
+          </p>
+
+
+
+          <p>
+
+            📞 704-273-6210
+
+          </p>
+
+
+
+          <p>
+
+            📧 scogginslawncarenc@gmail.com
+
+          </p>
+
+
+
+          <p className="mt-3">
+
+            Facebook | Instagram | TikTok | YouTube
+
+          </p>
+
+
+        </div>
 
 
 
@@ -610,7 +865,7 @@ export default function BookPage() {
 
     </main>
 
-
   );
+
 
 }
