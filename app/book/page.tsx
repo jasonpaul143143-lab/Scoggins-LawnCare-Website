@@ -282,6 +282,20 @@ export default function BookPage() {
           onSubmit={sendEmail}
 
         >
+  
+  <input
+    type="hidden"
+    name="date"
+    value={
+      selectedDate
+        ? selectedDate.toLocaleDateString()
+        : ""
+    }
+  />
+  <input
+    name="name"
+    placeholder="Full Name"
+/>
 
 
 
