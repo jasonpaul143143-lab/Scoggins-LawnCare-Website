@@ -253,18 +253,24 @@ const result = await supabase
   .from("bookings")
   .insert({
     name: formData.get("name")?.toString() || "",
-    phone: formData.get("phone")?.toString() || "",
     email: formData.get("email")?.toString() || "",
-    area: area,
+    phone: formData.get("phone")?.toString() || "",
+    area,
     date: selectedDate?.toLocaleDateString() || "",
     time: selectedTime,
     services: selectedServices.join(", "),
     package: selectedPackage,
     yard_size: yardSize,
-    notes: formData.get("message")?.toString() || "",
     price: estimatedPrice,
-    status: "Pending"
-  });
+    notes: formData.get("message")?.toString() || "",
+    status: "Pending",
+  })
+  .select();
+
+
+console.log("INSERT RESULT:", result);
+
+
 
 
 if (result.error) {
@@ -350,51 +356,140 @@ function checkForBundle(serviceList: string[]) {
 
 function calculatePrice() {
 
+
   let price = 0;
 
 
+
+
+  // Packages
   if (selectedPackage === "Basic") {
     price += 35;
   }
 
+
   if (selectedPackage === "Full Service") {
     price += 75;
   }
+
 
   if (selectedPackage === "Premium") {
     price += 100;
   }
 
 
+
+
+
+
+  // Individual Services
   if (!selectedPackage) {
 
-    if (selectedServices.length > 0) {
-      price += 35;
-    }
+
+    selectedServices.forEach((service) => {
+
+
+
+
+      if (service === "Lawn Mowing") {
+        price += 35;
+      }
+
+
+
+
+      if (service === "Edging") {
+        price += 10;
+      }
+
+
+
+
+      if (service === "Weed Eating") {
+        price += 10;
+      }
+
+
+
+
+      if (service === "Blowing") {
+        price += 10;
+      }
+
+
+
+
+      if (service === "Bush Trimming") {
+        price += 25;
+      }
+
+
+
+
+      if (service === "Leaf Cleanup") {
+        price += 40;
+      }
+
+
+
+
+      if (service === "Yard Cleanup") {
+        price += 50;
+      }
+
+
+
+
+    });
+
 
   }
+
+
+
+
+
+
+
+
+  // Yard size minimum pricing
 
 
   if (yardSize === "Small") {
     price = Math.max(price, 35);
   }
 
+
+
+
   if (yardSize === "Medium") {
     price = Math.max(price, 45);
   }
 
+
+
+
   if (yardSize === "Large") {
     price = Math.max(price, 60);
   }
+
+
+
 
   if (yardSize === "Extra Large") {
     price = Math.max(price, 80);
   }
 
 
+
+
+
+
   setEstimatedPrice(price);
 
+
 }
+
 
   return (
 

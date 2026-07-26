@@ -3,10 +3,11 @@
 
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
-import router from "next/router";
+import { useRouter } from "next/navigation";
 
 
-export default function AdminPage() {
+export default function AdminBookingsPage() {
+  const router = useRouter();
 
 
   const [bookings, setBookings] = useState<any[]>([]);
@@ -15,11 +16,23 @@ export default function AdminPage() {
 
 
 
+  async function checkUser() {
+    const { data } = await supabase.auth.getUser();
+
+
+    if (!data.user) {
+      router.push("/admin/login");
+      return false;
+    }
+
+
+    return true;
+  }
+
+
 
 
   async function getBookings() {
-
-
     const { data, error } = await supabase
       .from("bookings")
       .select("*")
@@ -33,17 +46,15 @@ export default function AdminPage() {
     if (error) {
       console.error(error);
       alert(error.message);
+      setLoading(false);
       return;
     }
 
 
 
 
-    console.log("BOOKINGS:", data);
     setBookings(data || []);
     setLoading(false);
-
-
   }
 
 
@@ -51,34 +62,30 @@ export default function AdminPage() {
 
 
 
+  useEffect(() => {
 
 
+    async function load() {
 
 
-useEffect(() => {
-  async function checkUser() {
-    const { data } = await supabase.auth.getUser();
+      const loggedIn = await checkUser();
 
 
-    if (!data.user) {
-      router.push("/admin/login");
-      return;
+      if (!loggedIn) return;
+
+
+      await getBookings();
+
+
     }
 
 
-    getBookings();
-  }
 
 
-  checkUser();
-}, []);
+    load();
 
 
-
-
-
-
-
+  }, []);
 
 
 
@@ -88,7 +95,10 @@ useEffect(() => {
 
 
   async function updateStatus(
-id: number, status: string, booking: any  ) {
+    id: number,
+    status: string,
+    booking?: any
+  ) {
 
 
 
@@ -96,7 +106,7 @@ id: number, status: string, booking: any  ) {
     const { error } = await supabase
       .from("bookings")
       .update({
-        status: status,
+        status,
       })
       .eq("id", id);
 
@@ -106,14 +116,58 @@ id: number, status: string, booking: any  ) {
 
 
     if (error) {
-
-
       console.error(error);
       alert(error.message);
       return;
+    }
+
+
+
+
+
+
+
+
+    if (status === "Confirmed" && booking) {
+
+
+      await fetch("/api/send-confirmation", {
+
+
+        method: "POST",
+
+
+        headers: {
+          "Content-Type": "application/json",
+        },
+
+
+
+
+        body: JSON.stringify({
+
+
+          email: booking.email,
+
+
+          name: booking.name,
+
+
+          date: booking.date,
+
+
+          time: booking.time,
+
+
+        }),
+
+
+      });
 
 
     }
+
+
 
 
 
@@ -122,12 +176,6 @@ id: number, status: string, booking: any  ) {
 
 
   }
-
-
-
-
-
-
 
 
 
@@ -141,6 +189,22 @@ id: number, status: string, booking: any  ) {
 
 
   async function deleteBooking(id: number) {
+
+
+
+
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this booking?"
+    );
+
+
+
+
+    if (!confirmDelete) return;
+
+
+
+
 
 
 
@@ -159,7 +223,11 @@ id: number, status: string, booking: any  ) {
 
 
       console.error(error);
+
+
       alert(error.message);
+
+
       return;
 
 
@@ -168,7 +236,18 @@ id: number, status: string, booking: any  ) {
 
 
 
-    getBookings();
+
+
+
+
+    setBookings((prev) =>
+      prev.filter((booking) => booking.id !== id)
+    );
+
+
+
+
+    alert("Booking deleted 🗑️");
 
 
   }
@@ -178,6 +257,24 @@ id: number, status: string, booking: any  ) {
 
 
 
+
+
+
+
+
+
+
+
+  async function logout() {
+
+
+    await supabase.auth.signOut();
+
+
+    router.push("/admin/login");
+
+
+  }
 
 
 
@@ -193,32 +290,26 @@ id: number, status: string, booking: any  ) {
   function statusColor(status: string) {
 
 
-
-
-    if (status === "Pending") {
+    if (status === "Pending")
       return "bg-yellow-500 text-black";
-    }
 
 
 
 
-    if (status === "Accepted") {
+    if (status === "Accepted")
       return "bg-orange-500 text-black";
-    }
 
 
 
 
-    if (status === "Confirmed") {
+    if (status === "Confirmed")
       return "bg-green-600 text-white";
-    }
 
 
 
 
-    if (status === "Completed") {
+    if (status === "Completed")
       return "bg-blue-600 text-white";
-    }
 
 
 
@@ -227,12 +318,6 @@ id: number, status: string, booking: any  ) {
 
 
   }
-
-
-
-
-
-
 
 
 
@@ -276,14 +361,6 @@ id: number, status: string, booking: any  ) {
 
 
 
-
-
-
-
-
-
-
-
   return (
 
 
@@ -297,20 +374,51 @@ id: number, status: string, booking: any  ) {
 
 
 
-        <h1 className="text-4xl font-bold text-green-400 mb-8">
-          Scoggins LawnCare Admin 🌱
-        </h1>
+
+
+        <div className="flex justify-between items-center mb-8">
+
+
+
+
+          <h1 className="text-4xl font-bold text-green-400">
+
+
+            Scoggins LawnCare Admin 🌱
+
+
+          </h1>
 
 
 
 
 
 
+          <button
+
+
+            onClick={logout}
+
+
+            className="bg-red-600 hover:bg-red-700 px-5 py-3 rounded-xl font-bold"
+
+
+          >
+
+
+            Logout
+
+
+          </button>
 
 
 
 
-        {bookings.length === 0 ? (
+
+
+        </div>
+
+       {bookings.length === 0 ? (
 
 
           <div className="bg-gray-800 p-6 rounded-xl">
@@ -336,9 +444,6 @@ id: number, status: string, booking: any  ) {
 
             {bookings.map((booking) => (
 
-              
-
-
 
 
 
@@ -347,14 +452,11 @@ id: number, status: string, booking: any  ) {
 
                 key={booking.id}
 
-            
 
                 className="bg-gray-800 border border-gray-700 rounded-2xl p-6 shadow-xl"
 
 
               >
-
-
 
 
 
@@ -409,92 +511,44 @@ id: number, status: string, booking: any  ) {
 
 
 
-
-
-
-
                 <div className="space-y-2 text-gray-200">
 
 
 
 
-                  <p>
-                    📞 {booking.phone}
-                  </p>
+                  <p>📞 {booking.phone}</p>
 
 
+                  <p>📧 {booking.email}</p>
 
 
-                  <p>
-                    📧 {booking.email}
-                  </p>
+                  <p>📍 {booking.area}</p>
 
 
+                  <p>📅 {booking.date}</p>
 
 
-                  <p>
-                    📍 {booking.area}
-                  </p>
+                  <p>⏰ {booking.time}</p>
 
 
+                  <p>🌱 Services: {booking.services}</p>
 
 
-                  <p>
-                    📅 {booking.date}
-                  </p>
+                  <p>📦 Package: {booking.package}</p>
 
 
+                  <p>🌿 Yard Size: {booking.yard_size}</p>
 
 
-                  <p>
-                    ⏰ {booking.time}
-                  </p>
+                  <p>💰 Price: ${booking.price}</p>
 
 
-
-
-                  <p>
-                    🌱 Services: {booking.services}
-                  </p>
-
-
-
-
-                  <p>
-                    📦 Package: {booking.package}
-                  </p>
-
-
-
-
-                  <p>
-                    🌿 Yard Size: {booking.yard_size}
-                  </p>
-
-
-
-
-                  <p>
-                    💰 Price: ${booking.price}
-                  </p>
-
-
-
-
-                  <p>
-                    📝 Notes: {booking.notes}
-                  </p>
+                  <p>📝 Notes: {booking.notes}</p>
 
 
 
 
                 </div>
-
-
-
-
-
-
 
 
 
@@ -525,44 +579,11 @@ id: number, status: string, booking: any  ) {
 
 
                       onClick={() =>
-                        async function updateStatus(
-  id: number,
-  status: string,
-  booking?: any
-) {
-  const { error } = await supabase
-    .from("bookings")
-    .update({
-      status: status,
-    })
-    .eq("id", id);
-
-
-  if (error) {
-    console.error(error);
-    alert(error.message);
-    return;
-  }
-
-
-  if (status === "Confirmed" && booking) {
-    await fetch("/api/send-confirmation", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email: booking.email,
-        name: booking.name,
-        date: booking.date,
-        time: booking.time,
-      }),
-    });
-  }
-
-
-  getBookings();
-}
+                        updateStatus(
+                          booking.id,
+                          "Accepted",
+                          booking
+                        )
                       }
 
 
@@ -591,10 +612,6 @@ id: number, status: string, booking: any  ) {
 
 
 
-
-
-
-
                   {booking.status === "Accepted" && (
 
 
@@ -604,7 +621,7 @@ id: number, status: string, booking: any  ) {
                       onClick={() =>
                         updateStatus(
                           booking.id,
-                          "Confirmed" ,
+                          "Confirmed",
                           booking
                         )
                       }
@@ -616,19 +633,13 @@ id: number, status: string, booking: any  ) {
                     >
 
 
-                      ✅ Confirm
+                      📧 Confirm & Send Email
 
 
                     </button>
 
 
                   )}
-
-
-
-
-
-
 
 
 
@@ -683,17 +694,11 @@ id: number, status: string, booking: any  ) {
 
 
 
-
-
-
-
                   <button
 
 
                     onClick={() =>
-                      deleteBooking(
-                        booking.id
-                      )
+                      deleteBooking(booking.id)
                     }
 
 
@@ -715,13 +720,7 @@ id: number, status: string, booking: any  ) {
 
 
 
-
-
                 </div>
-
-
-
-
 
 
 
@@ -733,18 +732,12 @@ id: number, status: string, booking: any  ) {
 
 
 
-
-
             ))}
 
 
 
 
-
-
           </div>
-
-
 
 
 
@@ -757,8 +750,6 @@ id: number, status: string, booking: any  ) {
 
 
       </div>
-
-
 
 
 
