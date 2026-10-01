@@ -61,12 +61,18 @@ footer{max-width:1240px;color:#7f8da0;border-top:1px solid rgba(56,72,94,.65)}
 <style>
 /* MODERN APP SHELL */
 body{background:#080c12;overflow-x:hidden}.app{min-height:100vh;background:radial-gradient(circle at 58% -12%,rgba(79,156,255,.08),transparent 28%),#080c12}
-header{position:fixed;left:0;top:0;bottom:0;width:236px;height:100vh;z-index:50;border:0;border-right:1px solid #263344;background:rgba(8,13,20,.92);box-shadow:10px 0 40px rgba(0,0,0,.24);backdrop-filter:blur(20px)}.nav{height:100%;max-width:none;margin:0;padding:22px 14px;display:flex;align-items:stretch;flex-direction:column;gap:24px}.brand{display:flex;align-items:center;gap:11px;padding:4px 10px 16px;border-bottom:1px solid #202b39;font-size:.95rem;letter-spacing:.08em}.brandLogo{width:34px;height:34px;flex:0 0 34px}.brandText{line-height:1.05}.brandText small{display:block;color:#7f8ea1;font-size:.54rem;letter-spacing:.15em;margin-top:5px}.brandText span{color:#4f9cff}.navlinks{width:100%;display:flex;flex-direction:column;gap:5px;overflow:visible}.navlinks button{width:100%;text-align:left;color:#8f9daf;padding:11px 12px;border-radius:9px;font-size:.9rem}.navlinks button:hover,.navlinks button.active{background:#121d2a;color:#f6f8fb;box-shadow:inset 2px 0 0 #4f9cff}.navlinks button:first-child{margin-bottom:3px}
-main{max-width:none;margin-left:236px;padding:34px 42px 86px}.hero{max-width:1280px;margin:auto;grid-template-columns:minmax(0,1.55fr) 330px}.heroCard,.progressCard,.lesson,.quiz,.lab,.glossary{background:rgba(15,22,32,.86);border-color:#263344;border-radius:14px;box-shadow:0 18px 45px rgba(0,0,0,.2)}.heroCard{padding:46px}.heroCard:after{background:radial-gradient(circle,rgba(79,156,255,.11),transparent 68%)}.hero h1{font-size:clamp(2.6rem,5vw,4.7rem)}.hero p{font-size:1.02rem;color:#a9b5c4}.progressCard{min-height:100%;padding:28px}.primary{background:#4f9cff;box-shadow:0 8px 24px rgba(79,156,255,.16)}
+header{position:fixed;left:0;right:0;top:0;width:100%;height:72px;z-index:60;border:0;border-bottom:1px solid #263344;background:rgba(8,13,20,.92);box-shadow:0 8px 30px rgba(0,0,0,.24);backdrop-filter:blur(20px)}.nav{height:100%;max-width:none;margin:0;padding:12px 18px;display:flex;align-items:center;gap:14px}.brand{display:flex;align-items:center;gap:11px;padding:0 8px;font-size:.95rem;letter-spacing:.08em}.brandLogo{width:34px;height:34px;flex:0 0 34px}.brandText{line-height:1.05}.brandText small{display:block;color:#7f8ea1;font-size:.54rem;letter-spacing:.15em;margin-top:5px}.brandText span{color:#4f9cff}.menuToggle{width:42px;height:42px;flex:0 0 42px;border:1px solid #304057;background:#101a27;border-radius:9px;display:grid;place-items:center;cursor:pointer}.menuToggle:hover{border-color:#4f9cff;background:#142235}.menuLines{width:19px;display:grid;gap:4px}.menuLines i{display:block;height:2px;border-radius:99px;background:#d9e6f5;transition:transform .18s,opacity .18s}.menuToggle[aria-expanded=true] .menuLines i:nth-child(1){transform:translateY(6px) rotate(45deg)}.menuToggle[aria-expanded=true] .menuLines i:nth-child(2){opacity:0}.menuToggle[aria-expanded=true] .menuLines i:nth-child(3){transform:translateY(-6px) rotate(-45deg)}.navlinks{position:fixed;left:0;top:72px;bottom:0;width:min(286px,86vw);padding:18px 14px 24px;display:flex;flex-direction:column;gap:5px;overflow:auto;background:rgba(8,13,20,.98);border-right:1px solid #263344;box-shadow:18px 0 42px rgba(0,0,0,.28);transform:translateX(-105%);transition:transform .2s ease}.navlinks.open{transform:translateX(0)}.navlinks button{width:100%;text-align:left;color:#8f9daf;padding:11px 12px;border-radius:9px;font-size:.9rem}.navlinks button:hover,.navlinks button.active{background:#121d2a;color:#f6f8fb;box-shadow:inset 2px 0 0 #4f9cff}.navlinks button:first-child{margin-bottom:3px}.navScrim{position:fixed;inset:72px 0 0 0;background:rgba(0,0,0,.46);z-index:55;opacity:0;visibility:hidden;transition:opacity .2s,visibility .2s}.navScrim.open{opacity:1;visibility:visible}
+main{max-width:none;margin-left:0;padding:98px 42px 86px}.hero{max-width:1280px;margin:auto;grid-template-columns:minmax(0,1.55fr) 330px}.heroCard,.progressCard,.lesson,.quiz,.lab,.glossary{background:rgba(15,22,32,.86);border-color:#263344;border-radius:14px;box-shadow:0 18px 45px rgba(0,0,0,.2)}.heroCard{padding:46px}.heroCard:after{background:radial-gradient(circle,rgba(79,156,255,.11),transparent 68%)}.hero h1{font-size:clamp(2.6rem,5vw,4.7rem)}.hero p{font-size:1.02rem;color:#a9b5c4}.progressCard{min-height:100%;padding:28px}.primary{background:#4f9cff;box-shadow:0 8px 24px rgba(79,156,255,.16)}
 .section{max-width:1280px;margin-left:auto;margin-right:auto}.sectionHead h2{font-size:1.65rem}.grid{gap:15px}.lesson{min-height:208px;padding:21px}.lesson:hover{transform:translateY(-2px);border-color:#3e526d}.tag{background:#121d2a;border-color:#29394d}.filter{background:#0f1722}.spaceCard,.labBox,.term,.answer,.featureBtn,.modeBtn,.pollOption,.statBox{border-color:#29384b}.spaceCard{border-radius:12px}.lab,.glossary{padding:24px}.searchInput{background:#0b121b}.featurePanel{background:#0f1722;border-color:#263548}.lessonArticle{background:#0f1722;border-color:#2a3a4e}
-footer{margin-left:236px;max-width:none;padding:22px 30px;color:#6f7d8f;border-top:1px solid #202b39}
-@media(max-width:820px){header{position:sticky;top:0;left:auto;bottom:auto;width:100%;height:auto;border-right:0;border-bottom:1px solid #263344}.nav{height:auto;padding:13px 14px;gap:12px}.brand{padding:0 5px 12px}.navlinks{flex-direction:row;overflow:auto}.navlinks button{width:auto;white-space:nowrap;text-align:center}.navlinks button:first-child{margin-bottom:0}main{margin-left:0;padding:24px 18px 65px}footer{margin-left:0}.hero{grid-template-columns:1fr}.section{max-width:none}}
-@media(max-width:580px){main{padding:20px 14px 55px}.heroCard{padding:29px}.hero h1{font-size:2.85rem}}
+footer{margin-left:0;max-width:none;padding:22px 30px;color:#6f7d8f;border-top:1px solid #202b39}
+@media(max-width:820px){main{padding:94px 18px 65px}.hero{grid-template-columns:1fr}.section{max-width:none}}
+@media(max-width:580px){header{height:66px}.nav{padding:10px 12px}.brand{padding:0 4px}.brandLogo{width:30px;height:30px;flex-basis:30px}.brandText small{font-size:.5rem}.navlinks{top:66px;width:min(280px,88vw)}.navScrim{inset:66px 0 0 0}main{padding:86px 14px 55px}.heroCard{padding:29px}.hero h1{font-size:2.85rem}}
+</style>
+<style>
+/* FINAL ICON + UI POLISH */
+:root{--iconAccent:#facc15;--iconMuted:#9fb0c3}
+.sl6InlineIcon,.sl6NavIcon{display:inline-flex;align-items:center;justify-content:center;color:var(--iconAccent);width:1.12em;height:1.12em;vertical-align:-.18em;flex:0 0 auto}.sl6InlineIcon svg,.sl6NavIcon svg{width:100%;height:100%;display:block;overflow:visible}.sl6InlineIcon{margin:0 .28em 0 .04em}.sl6NavIcon{width:18px;height:18px;margin-right:9px;vertical-align:-4px}.navlinks button{display:flex;align-items:center;gap:0}.menuLines i{background:var(--iconAccent)!important}.menuToggle{box-shadow:inset 0 0 0 1px rgba(250,204,21,.06)}.menuToggle:hover{border-color:var(--iconAccent)!important;box-shadow:0 0 0 3px rgba(250,204,21,.08)}button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:2px solid var(--iconAccent);outline-offset:2px}.lesson .icon{display:flex;align-items:center;justify-content:center;width:42px;height:42px;margin-bottom:2px;color:var(--iconAccent);background:#141e2b;border:1px solid #304057;border-radius:10px}.lesson .icon .sl6InlineIcon{width:22px;height:22px;margin:0}.lesson:hover .icon{border-color:var(--iconAccent);background:#1a2431}.sl6NavIcon{padding:3px;border-radius:5px}.navlinks button.active .sl6NavIcon,.navlinks button:hover .sl6NavIcon{color:var(--iconAccent)}
+.finalPolish{border-top:1px solid rgba(79,156,255,.15);margin-top:18px;padding-top:18px}
 </style>
 </head>
 <style>
@@ -81,7 +87,7 @@ footer{margin-left:236px;max-width:none;padding:22px 30px;color:#6f7d8f;border-t
 <!-- Loading screen disabled -->
 <div class="toast" id="toast"></div>
 <div class="app" id="top">
-<header><div class="nav"><div class="brand"><svg class="brandLogo" viewBox="0 0 64 64" aria-label="Science Lab 6 logo"><rect width="64" height="64" rx="16" fill="#0b121b"/><ellipse cx="32" cy="32" rx="25" ry="11" fill="none" stroke="#7db8ff" stroke-width="3" transform="rotate(-18 32 32)"/><path d="M22 47c-4-6-6-11-6-17 0-12 8-22 19-22 6 0 10 2 14 6-4-2-7-3-11-3-11 0-19 10-19 22 0 5 1 9 3 14z" fill="#4f9cff"/></svg><div class="brandText">SCIENCE <span>LAB 6</span><small>GRADE 6 STUDY HUB</small></div></div><div class="navlinks"><button onclick="go('home')">Home</button><button onclick="go('lessons')">Lessons</button><button onclick="go('quiz')">Quiz</button><button onclick="go('lab')">Lab</button><button onclick="go('words')">Words</button></div></div></header>
+<header><div class="nav"><button class="menuToggle" id="menuToggle" type="button" aria-label="Open navigation" aria-expanded="false"><span class="menuLines" aria-hidden="true"><i></i><i></i><i></i></span></button><div class="brand"><svg class="brandLogo" viewBox="0 0 64 64" aria-label="Science Lab 6 logo"><rect width="64" height="64" rx="16" fill="#0b121b"/><ellipse cx="32" cy="32" rx="25" ry="11" fill="none" stroke="#7db8ff" stroke-width="3" transform="rotate(-18 32 32)"/><path d="M22 47c-4-6-6-11-6-17 0-12 8-22 19-22 6 0 10 2 14 6-4-2-7-3-11-3-11 0-19 10-19 22 0 5 1 9 3 14z" fill="#4f9cff"/></svg><div class="brandText">SCIENCE <span>LAB 6</span><small>GRADE 6 STUDY HUB</small></div></div><div class="navlinks"><button onclick="go('home')">Home</button><button onclick="go('lessons')">Lessons</button><button onclick="go('quiz')">Quiz</button><button onclick="go('lab')">Lab</button><button onclick="go('words')">Words</button></div></div></header><div class="navScrim" id="navScrim"></div>
 <main>
 <div style="margin-bottom:18px;padding:10px 12px;border-left:3px solid #facc15;background:#171717;color:#b0b0b0;font-size:.84rem;line-height:1.5"><b style="color:#facc15">NC Grade 6 • 2023 Standards:</b> This site is aligned to the current North Carolina Grade 6 Science Standard Course of Study. The standards are a framework, so your school may teach the objectives in a different order or add local curriculum.</div>
 <section class="section" id="schoolAccess" style="margin-top:0"><div class="featurePanel"><div class="sectionHead"><div><h2>School Access</h2><p>Science Lab 6 is built as a web-based study resource, so a school technology administrator can use its launch URL in a student portal such as ClassLink.</p></div><span class="pill">Web resource</span></div><div class="featureGrid"><div class="statBox"><b>ClassLink-ready</b><span>Launch this site from a school portal without installing a desktop app.</span></div><div class="statBox"><b>Student friendly</b><span>Lessons, practice, labs, vocabulary, and progress stay in one browser-based hub.</span></div><div class="statBox"><b>Launch URL</b><span id="launchUrlText">Loading current site URL…</span></div><div class="statBox"><button class="featureBtn" style="width:100%" onclick="copyLaunchUrl()"><strong>Copy launch URL</strong><span>Copy the address a school administrator would use for the web resource.</span></button></div></div></div></section>
@@ -557,7 +563,95 @@ body.teacherUnlocked #assignmentWorkspace{display:block!important}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
 })();
 </script>
+<script>
+(function(){
+  function removeLeakedCode(){
+    const markers=['window.openFlashcards','window.answerChallenge','function renderFlashcard','scienceLab6StateV2'];
+    const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);
+    const remove=[];
+    let node;
+    while(node=walker.nextNode()){
+      const parent=node.parentElement;
+      if(!parent||parent.closest('script,style,textarea'))continue;
+      const value=node.nodeValue||'';
+      if(value.length>120&&markers.some(m=>value.includes(m)))remove.push(node);
+    }
+    remove.forEach(n=>n.remove());
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',removeLeakedCode,{once:true});else removeLeakedCode();
+  new MutationObserver(removeLeakedCode).observe(document.body,{childList:true,subtree:true});
+})();
+</script>
 </body></html>
+<script>
+(function(){
+  const ICONS={
+    microscope:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h4v3H9z"/><path d="M11 6v6a4 4 0 0 0 4 4h2"/><path d="M7 14a5 5 0 1 0 9 3"/><path d="M5 21h14"/><path d="M14 4l3 3"/></svg>',
+    chart:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V5"/><path d="M4 19h16"/><path d="M7 15l4-4 3 2 5-6"/><path d="M16 7h3v3"/></svg>',
+    atom:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><ellipse cx="12" cy="12" rx="8.5" ry="3.7"/><ellipse cx="12" cy="12" rx="8.5" ry="3.7" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="8.5" ry="3.7" transform="rotate(120 12 12)"/><circle cx="12" cy="12" r="1.7" fill="currentColor" stroke="none"/></svg>',
+    flame:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M13 3c1 4-3 5-1 9 1 2 3 1 3-2 3 2 5 5 5 8a8 8 0 1 1-15-4c1-3 4-5 6-7 1-1 1-3 2-4Z"/><path d="M12 13c-2 2-2 5 1 6 2-1 3-3 1-5"/></svg>',
+    bolt:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M13.4 2 5 13h6l-1.4 9L19 10h-6z"/></svg>',
+    wave:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M2 12c2.2-7 5.8-7 8 0s5.8 7 8 0 5.8-7 8 0"/></svg>',
+    spectrum:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 17h2M4 13h4M4 9h6M14 9h6M16 13h4M18 17h2"/></svg>',
+    sound:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10v4h4l5 4V6l-5 4z"/><path d="M17 9a5 5 0 0 1 0 6M19 6.5a8.5 8.5 0 0 1 0 11"/></svg>',
+    leaf:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 4C11 4 5 8 5 14c0 3 2 5 5 5 6 0 10-6 10-15Z"/><path d="M4 20c3-5 7-8 12-10"/></svg>',
+    sprout:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21V11"/><path d="M12 14c-4 0-6-2-6-6 4 0 6 2 6 6ZM12 11c0-4 2-6 6-6 0 4-2 6-6 6Z"/></svg>',
+    ecosystem:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="9" r="3"/><circle cx="16" cy="9" r="3"/><path d="M5 17c0-2 1.5-3 3-3s3 1 3 3M13 17c0-2 1.5-3 3-3s3 1 3 3"/><path d="M11 12h2"/></svg>',
+    desert:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="17" cy="7" r="3"/><path d="M3 19c4-3 7-3 11 0 3-2 5-2 7-1"/><path d="M7 19v-5M6 14c2 0 3-1 3-3"/></svg>',
+    sun:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>',
+    earth:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="8.5"/><path d="M5 9c2 1 4 1 6 0 2-1 4-1 7 0M7 15c2-1 4-1 6 0 2 1 4 1 5 0M12 3c-2 3-2 6 0 9s2 6 0 9"/></svg>',
+    planet:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="5.7"/><ellipse cx="12" cy="12" rx="10" ry="3.8" transform="rotate(-18 12 12)"/></svg>',
+    moon:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.9 3.6A8.5 8.5 0 1 0 20.4 16 8 8 0 1 1 16.9 3.6Z"/></svg>',
+    volcano:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16l-6-10h-4z"/><path d="M12 10V6M10 7l2-3 2 3"/><path d="M9 17h6"/></svg>',
+    rock:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="m4 18 3-9 6-4 7 5-2 8z"/><path d="m7 9 5 2 5-1M12 11l2 7"/></svg>',
+    field:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16M6 20V9l4-3 4 3v11M14 20v-7l3-2 3 2v7M8 12h2M8 16h2M17 15h1"/></svg>',
+    rocket:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M14 4c3-2 5-2 6-2 0 5-1 7-4 10l-3 3-4-4 3-3c1-1 1-2 2-4Z"/><path d="m8 12-3 1-2 3 5-1M12 16l-1 5 3-2 1-3"/><circle cx="16" cy="7" r="1.5"/></svg>',
+    question:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.7 2.7 0 1 1 4.6 2c-1.3 1-2.1 1.5-2.1 3M12 17h.01"/></svg>',
+    ruler:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m4 17 13-13 3 3L7 20H4z"/><path d="m9 12 2 2M12 9l2 2M15 6l2 2"/></svg>',
+    trend:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 18 9 13l4 3 7-9"/><path d="M16 7h4v4"/></svg>',
+    flask:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6M10 3v5l-5 9a2 2 0 0 0 2 3h10a2 2 0 0 0 2-3l-5-9V3"/><path d="M8 15h8"/></svg>',
+    timer:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="7"/><path d="M12 13V9M9 3h6M12 3v3M19 7l1-1"/></svg>',
+    dice:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="5" y="5" width="14" height="14" rx="3"/><circle cx="9" cy="9" r=".8" fill="currentColor" stroke="none"/><circle cx="15" cy="9" r=".8" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r=".8" fill="currentColor" stroke="none"/><circle cx="9" cy="15" r=".8" fill="currentColor" stroke="none"/><circle cx="15" cy="15" r=".8" fill="currentColor" stroke="none"/></svg>',
+    cards:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="7" y="4" width="10" height="14" rx="1.5"/><rect x="10" y="7" width="10" height="13" rx="1.5"/></svg>',
+    target:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none"/></svg>',
+    tools:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m14 6 4-4 2 2-4 4M13 7l4 4M4 20l6-6M3 12l9 9"/><path d="M7 5h4M5 7v4"/></svg>',
+    clipboard:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="6" y="5" width="12" height="15" rx="2"/><path d="M9 5V3h6v2M9 10h6M9 14h5"/></svg>',
+    recycle:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m9 4 2-2 2 2M11 2l3 5"/><path d="M8 7 5 12a3 3 0 0 0 3 4h3M5 12l3 1M15 17l3-5M18 12l-3-1M13 20l-2 2-2-2M11 22l-1-5"/></svg>',
+    pen:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m4 16 9-9 4 4-9 9-4 0z"/><path d="m13 7 2-2 4 4-2 2M4 20h5"/></svg>',
+    printer:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M7 9V4h10v5M7 17H5a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2h-2"/><path d="M7 14h10v6H7z"/></svg>',
+    brain:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M9 5a3 3 0 0 0-3 3v1a3 3 0 0 0 0 6v1a3 3 0 0 0 3 3h2V5Z"/><path d="M15 5a3 3 0 0 1 3 3v1a3 3 0 0 1 0 6v1a3 3 0 0 1-3 3h-2V5Z"/><path d="M8 9h2M14 9h2M8 15h2M14 15h2M12 7v11"/></svg>',
+    school:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="m3 10 9-6 9 6"/><path d="M5 10v9M9 13v6M15 13v6M19 10v9M3 19h18"/></svg>',
+    home:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="m4 11 8-7 8 7"/><path d="M6 10v9h12v-9M10 19v-5h4v5"/></svg>',
+    book:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M5 4h10a4 4 0 0 1 4 4v12H9a4 4 0 0 0-4-4z"/><path d="M5 4v12M9 20h10"/></svg>',
+    grid:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/></svg>',
+    check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/></svg>',
+    teacher:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="m3 9 9-5 9 5-9 5z"/><path d="M7 12v5M17 12v5M7 17c3 2 7 2 10 0M12 14v6"/></svg>',
+    quiz:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4" width="14" height="16" rx="2"/><path d="M9 8h6M9 12h6M9 16h3"/></svg>',
+    fallback:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="8"/><path d="m8 12 2 2 5-5"/></svg>'
+  };
+  const EMOJI_MAP={
+    '🔬':'microscope','📊':'chart','⚛️':'atom','🔥':'flame','⚡':'bolt','〰️':'wave','🌈':'spectrum','🔊':'sound','🌱':'sprout','🌿':'leaf','🦊':'ecosystem','🏜️':'desert','☀️':'sun','🌎':'earth','🌋':'volcano','🪨':'rock','🌾':'field','🌙':'moon','🚀':'rocket','🪐':'planet','❓':'question','📐':'ruler','📈':'trend','🧪':'flask','⏱':'timer','⏱️':'timer','🎲':'dice','🗂':'cards','🗂️':'cards','🧠':'brain','🎯':'target','🧰':'tools','📋':'clipboard','♻':'recycle','♻️':'recycle','✍️':'pen','✍':'pen','🖨':'printer','🖨️':'printer','↩️':'check'
+  };
+  const escaped=Object.keys(EMOJI_MAP).sort((a,b)=>b.length-a.length).map(s=>s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'));
+  const emojiRe=new RegExp('('+escaped.join('|')+')','gu');
+  function svgIcon(name,cls='sl6InlineIcon'){return '<span class="'+cls+'" aria-hidden="true">'+(ICONS[name]||ICONS.fallback)+'</span>'}
+  function replaceEmojiTextNode(node){
+    if(!node||!node.nodeValue||node.parentElement?.closest('script,style,textarea,select,.sl6InlineIcon'))return;
+    const text=node.nodeValue;if(!emojiRe.test(text)){emojiRe.lastIndex=0;return}emojiRe.lastIndex=0;
+    const frag=document.createDocumentFragment();let last=0,m;
+    while((m=emojiRe.exec(text))){if(m.index>last)frag.appendChild(document.createTextNode(text.slice(last,m.index)));frag.appendChild(document.createRange().createContextualFragment(svgIcon(EMOJI_MAP[m[0]])));last=m.index+m[0].length}
+    if(last<text.length)frag.appendChild(document.createTextNode(text.slice(last)));node.replaceWith(frag);
+  }
+  function polishEmojis(){const root=document.body;if(!root)return;const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);const nodes=[];let n;while(n=walker.nextNode())nodes.push(n);nodes.forEach(replaceEmojiTextNode)}
+  const NAV_ICONS={Home:'home',Dashboard:'grid',Lessons:'book',Quiz:'quiz',Lab:'flask',Words:'book',Practice:'target',Curriculum:'grid',Progress:'chart',School:'school','To-Do':'check',Teacher:'teacher'};
+  function decorateNav(){document.querySelectorAll('.navlinks button').forEach(btn=>{const label=btn.textContent.trim();const key=NAV_ICONS[label];if(!key||btn.querySelector('.sl6NavIcon'))return;btn.insertAdjacentHTML('afterbegin',svgIcon(key,'sl6NavIcon'))})}
+  function finalPolish(){polishEmojis();decorateNav()}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',finalPolish,{once:true});else finalPolish();
+  window.addEventListener('load',finalPolish);
+  const observer=new MutationObserver(()=>{polishEmojis();decorateNav()});
+  observer.observe(document.body,{childList:true,subtree:true});
+})();
+</script>
 <script>
 (function(){
   const checks=[
@@ -878,169 +972,154 @@ body.teacherUnlocked #assignmentWorkspace{display:block!important}
   document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSpaceGame()});
 })();
 </script>
-
 <style>
-.customTeacherCard{margin-top:14px;padding:20px;background:#0f1722;border:1px solid #2d4056;border-radius:10px}
-.customTeacherHead{display:flex;justify-content:space-between;align-items:end;gap:12px;margin-bottom:16px}
-.customTeacherHead h3{margin:0;font-size:1.1rem}
-.customTeacherHead p{margin:5px 0 0;color:#8f9eaf;font-size:.78rem;line-height:1.5}
-.customTeacherForm{display:grid;gap:12px}
-.customTeacherRow{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.customField{display:flex;flex-direction:column;gap:6px}
-.customField.full{grid-column:1/-1}
-.customField label{font-size:.74rem;font-weight:900;color:#aab8c8}
-.customField input,.customField select,.customField textarea{width:100%;box-sizing:border-box;background:#0b131d;color:#f4f7fb;border:1px solid #304258;border-radius:8px;padding:10px 11px;font:inherit}
-.customField textarea{min-height:110px;resize:vertical}
-.customQuestions{display:grid;gap:10px}
-.customQuestion{padding:15px;border:1px solid #293a50;border-radius:9px;background:#111b28}
-.customQuestionHeader{display:flex;justify-content:space-between;align-items:center;gap:10px}
-.customQuestionHeader b{font-size:.8rem}
-.customQuestionGrid{display:grid;grid-template-columns:1.35fr .65fr;gap:10px;margin-top:10px}
-.customOptions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
-.customQuestion input,.customQuestion select,.customQuestion textarea{width:100%;box-sizing:border-box;background:#0b131d;color:#f4f7fb;border:1px solid #304258;border-radius:7px;padding:9px;font:inherit}
-.customQuestion textarea{min-height:78px;resize:vertical}
-.customTeacherActions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-.customPublishList{display:grid;gap:9px;margin-top:14px}
-.customPublishItem{padding:13px;border:1px solid #293a50;background:#111b28;border-radius:9px}
-.customPublishTop{display:flex;justify-content:space-between;gap:10px;align-items:start}
-.customPublishItem h4{margin:0;font-size:.9rem}
-.customPublishItem p{margin:5px 0 0;color:#8e9daf;font-size:.75rem;line-height:1.45}
-.customPill{display:inline-flex;padding:4px 7px;border:1px solid #34485f;border-radius:999px;color:#9fb0c3;font-size:.64rem;font-weight:900}
-.customStudentList{margin-top:14px}
-.customStudentItem{padding:15px;border:1px solid #2a3c52;background:#111b28;border-radius:10px;margin-top:10px}
-.customStudentItem h3{margin:0;font-size:.92rem}
-.customStudentMeta{display:flex;gap:7px;flex-wrap:wrap;margin-top:8px}
-.customOpenBtn{margin-top:11px;border:1px solid #4f9cff;background:#4f9cff;color:#06101d;border-radius:7px;padding:9px 12px;font-size:.74rem;font-weight:900;cursor:pointer}
-.customReader{min-height:100vh;background:#080e16;color:#f5f7fa;font-family:Inter,system-ui,sans-serif}
-.customReaderNav{padding:15px 22px;border-bottom:1px solid #28384c;background:#0c141f}
-.customReaderNavIn{max-width:920px;margin:auto;display:flex;justify-content:space-between;align-items:center;gap:12px}
-.customReaderBrand{font-weight:900;letter-spacing:.08em}.customReaderBrand span{color:#4f9cff}
-.customReaderMain{max-width:920px;margin:auto;padding:38px 22px 80px}
-.customReaderMeta{color:#7db8ff;font-size:.72rem;text-transform:uppercase;letter-spacing:.1em;font-weight:900}
-.customReaderTitle{font-size:clamp(2.2rem,6vw,4rem);letter-spacing:-.045em;line-height:1;margin:9px 0}
-.customReaderSub{color:#96a5b6}
-.customReaderCard{margin-top:24px;padding:24px;background:#111b27;border:1px solid #2a3a4e;border-radius:12px}
-.customReaderCard h2{font-size:1.05rem;margin:0 0 9px}
-.customReaderCard p{color:#d4dce7;line-height:1.75}
-.customPassage{white-space:pre-wrap;padding:17px;background:#0b141f;border:1px solid #29394d;border-radius:8px;color:#d7e0ea;line-height:1.8}
-.customReaderQuestion{margin-top:17px;padding:15px;background:#152131;border:1px solid #2b3d52;border-radius:8px}
-.customReaderQuestion h3{margin:0 0 8px;font-size:.95rem}
-.customReaderQuestion label{display:block;margin-top:7px;padding:10px;border:1px solid #34485f;background:#0b131d;border-radius:7px;cursor:pointer}
-.customReaderQuestion textarea{width:100%;min-height:115px;box-sizing:border-box;background:#0b131d;color:#fff;border:1px solid #34485f;border-radius:7px;padding:10px;font:inherit;resize:vertical}
-.customReaderActions{display:flex;gap:8px;flex-wrap:wrap;margin-top:17px}
-.customReaderBtn{border:1px solid #34485f;background:#152131;color:#fff;border-radius:7px;padding:10px 13px;font-weight:900;cursor:pointer}
-.customReaderBtn.primary{background:#4f9cff;color:#06101d;border-color:#4f9cff}
-.customReaderResult{margin-top:12px;padding:11px 13px;border-radius:8px;background:#141f2d;color:#b5c1d0;line-height:1.55}
-.customScore{color:#86efac;font-weight:900}
-@media(max-width:700px){.customTeacherRow,.customQuestionGrid,.customOptions{grid-template-columns:1fr}.customField.full{grid-column:auto}.customReaderMain{padding:28px 14px 60px}.customReaderCard{padding:19px}}
+.routeHidden{display:none!important}.routePage main{margin-left:0}.routePage header{display:none}.routePage footer{display:none}.routePage .routeShell{display:block;min-height:100vh;padding:28px}.routePage .routeBack{display:inline-flex;align-items:center;gap:6px;border:1px solid #34485f;background:#152131;color:#fff;border-radius:7px;padding:9px 12px;font-weight:800;cursor:pointer}.routePage .routeFrame{max-width:980px;margin:0 auto}.routePage .routeTitle{font-size:clamp(2rem,5vw,3.4rem);letter-spacing:-.04em;margin:18px 0 8px}.routePage .routeSub{color:#91a0b2;line-height:1.6;margin:0 0 22px}
+@media(max-width:820px){.routePage main{margin-left:0}.routePage .routeShell{padding:20px 14px}}
 </style>
 <script>
 (function(){
-  const A='scienceLab6AssignmentsV1',D='scienceLab6AssignmentDoneV1',R='scienceLab6CustomResponsesV1';
-  let assignments=[],doneMap={},responses={};
-  const read=(k,f)=>{try{const v=JSON.parse(localStorage.getItem(k)||'');return v??f}catch(e){return f}};
-  assignments=read(A,[]);if(!Array.isArray(assignments))assignments=[];
-  doneMap=read(D,{});if(!doneMap||typeof doneMap!=='object')doneMap={};
-  responses=read(R,{});if(!responses||typeof responses!=='object')responses={};
-  const save=()=>{try{localStorage.setItem(A,JSON.stringify(assignments));localStorage.setItem(D,JSON.stringify(doneMap));localStorage.setItem(R,JSON.stringify(responses))}catch(e){}};
-  const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-  const custom=a=>!!a?.customAssignment;
-  const dateText=d=>{if(!d)return'No due date';const x=new Date(d+'T12:00:00');return Number.isNaN(x.getTime())?'No due date':x.toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'})};
-  const params=new URLSearchParams(location.search);
-  const assignmentId=params.get('assignment');
+  const pageMap={
+    Home:'home',
+    Dashboard:'dashboard',
+    Lessons:'lessons',
+    Quiz:'quiz',
+    Lab:'lab',
+    Words:'words',
+    Practice:'proPractice',
+    Curriculum:'proCurriculum',
+    Progress:'dashboard',
+    School:'schoolAccess',
+    'To-Do':'studentTodo',
+    Teacher:'teacher'
+  };
+  const labels=Object.keys(pageMap);
+  const route=new URLSearchParams(location.search).get('page');
+  const isLesson=new URLSearchParams(location.search).has('lesson');
 
-  function addQuestion(host,data){
-    const n=host.children.length+1;
-    const q=data||{type:'mc',prompt:'',options:['','','',''],correct:0,answerKey:''};
-    const el=document.createElement('div');el.className='customQuestion';
-    el.innerHTML='<div class="customQuestionHeader"><b>Question '+n+'</b><button type="button" class="todoBtn" data-remove-custom-question>Remove</button></div><div class="customQuestionGrid"><div class="customField"><label>Question prompt</label><textarea data-prompt placeholder="Write the question...">'+esc(q.prompt)+'</textarea></div><div class="customField"><label>Question type</label><select data-type><option value="mc" '+(q.type==='mc'?'selected':'')+'>Multiple choice</option><option value="written" '+(q.type==='written'?'selected':'')+'>Written response</option></select></div></div><div data-question-body></div>';
-    host.appendChild(el);
-    const type=el.querySelector('[data-type]'),body=el.querySelector('[data-question-body]');
-    const draw=()=>{
-      if(type.value==='mc'){
-        body.innerHTML='<div class="customOptions">'+[0,1,2,3].map(i=>'<input data-option="'+i+'" placeholder="Choice '+String.fromCharCode(65+i)+'" value="'+esc(q.options?.[i]||'')+'">').join('')+'</div><div class="customField" style="margin-top:8px"><label>Correct choice</label><select data-correct>'+[0,1,2,3].map(i=>'<option value="'+i+'" '+(Number(q.correct)===i?'selected':'')+'>'+String.fromCharCode(65+i)+'</option>').join('')+'</select></div>';
-      }else{
-        body.innerHTML='<div class="customField" style="margin-top:8px"><label>Teacher answer key <span style="font-weight:600;color:#75879b">(optional)</span></label><textarea data-answer-key placeholder="What should a good response include?">'+esc(q.answerKey||'')+'</textarea></div>';
+  function goPage(page){
+    const target=page==='home'?'?page=home':'?page='+encodeURIComponent(page);
+    location.href=target;
+  }
+
+  function hideEverything(){
+    document.querySelectorAll('main > section').forEach(s=>s.classList.add('routeHidden'));
+    document.querySelectorAll('main > div').forEach(d=>{
+      if(!d.classList.contains('routeShell'))d.classList.add('routeHidden');
+    });
+  }
+
+  function buildRouteShell(){
+    if(document.getElementById('routeShell'))return;
+    const shell=document.createElement('div');
+    shell.id='routeShell';
+    shell.className='routeShell';
+    shell.innerHTML='<div class="routeFrame"><button class="routeBack" onclick="location.href=location.pathname">← Science Lab 6 home</button><div class="routeTitle" id="routeTitle">Science Lab 6</div><p class="routeSub" id="routeSub">Page</p></div>';
+    document.body.insertBefore(shell,document.body.firstChild);
+  }
+
+  function showTarget(id,title,sub){
+    buildRouteShell();
+    document.body.classList.add('routePage');
+    hideEverything();
+    const shell=document.getElementById('routeShell');
+    const frame=shell?.querySelector('.routeFrame');
+    if(!frame)return;
+    document.getElementById('routeTitle').textContent=title;
+    document.getElementById('routeSub').textContent=sub;
+    id.forEach(sectionId=>{
+      const target=document.getElementById(sectionId);
+      if(target){target.classList.remove('routeHidden');frame.appendChild(target);}
+    });
+  }
+
+  function setupNav(){
+    const buttons=[...document.querySelectorAll('.navlinks button')];
+    buttons.forEach(b=>{
+      const label=b.textContent.trim();
+      if(!labels.includes(label)||b.dataset.routeBound)return;
+      b.dataset.routeBound='1';
+      b.onclick=e=>{e.preventDefault();goPage(pageMap[label])};
+    });
+  }
+
+  function applyRoute(){
+    if(isLesson)return;
+    setupNav();
+    const key=route||'home';
+    const config={
+      home:[['home'],'Home','Your Science Lab 6 study hub.'],
+      dashboard:[['dashboard'],'Dashboard','Track study progress, streaks, badges, and study tools.'],
+      lessons:[['proCurriculum','lessons'],'Lessons','Open the Grade 6 science learning path.'],
+      quiz:[['proPractice','featureHub','quiz'],'Quiz','Practice questions and the Grade 6 assessment.'],
+      lab:[['lab','proSimulations'],'Lab','Hands-on activities and interactive science simulations.'],
+      words:[['words'],'Words','Science vocabulary and quick definitions.'],
+      proPractice:[['proPractice','featureHub','quiz'],'Practice Center','Quick checks, assessments, mistakes, and daily practice.'],
+      proCurriculum:[['proCurriculum','lessons'],'Curriculum Map','See the complete Grade 6 study sequence.'],
+      schoolAccess:[['schoolAccess'],'School Access','Launch information and school-resource details.'],
+      studentTodo:[['studentTodo'],'To-Do','Your class assignments and follow-up work.'],
+      teacher:[['assignmentWorkspace'],'Teacher Workspace','Teacher assignment and classwork tools.']
+    }[key]||null;
+    if(!config)return goPage('home');
+    const [ids,title,sub]=config;
+    if(!ids.some(id=>document.getElementById(id)))return setTimeout(applyRoute,250);
+    showTarget(ids,title,sub);
+    if(key==='teacher'){
+      setTimeout(()=>{
+        const gate=document.getElementById('teacherGate');
+        if(gate)gate.classList.add('open');
+        document.getElementById('teacherCode')?.focus();
+      },250);
+    }
+  }
+
+  function wireDynamicButtons(){
+    document.addEventListener('click',e=>{
+      const lessonBtn=e.target.closest('button[onclick*="openLesson("]');
+      if(lessonBtn){
+        const m=(lessonBtn.getAttribute('onclick')||'').match(/openLesson\((\d+)\)/);
+        if(m){e.preventDefault();location.href='?lesson='+m[1];}
       }
-    };
-    draw();
-    type.onchange=draw;
-    el.querySelector('[data-remove-custom-question]').onclick=()=>{el.remove();[...host.children].forEach((x,i)=>x.querySelector('.customQuestionHeader b').textContent='Question '+(i+1))};
-  }
-
-  function teacherBuilder(){
-    const ws=document.getElementById('assignmentWorkspace');
-    if(!ws||document.getElementById('customTeacherBuilder'))return;
-    const card=document.createElement('section');card.id='customTeacherBuilder';card.className='customTeacherCard';
-    card.innerHTML='<div class="customTeacherHead"><div><h3>Create your own assignment</h3><p>Build a passage, questions, instructions, and a due date. Students get a separate assignment page from their To-Do list.</p></div><span class="proKicker">CUSTOM ASSIGNMENT</span></div><form class="customTeacherForm" id="customTeacherForm"><div class="customTeacherRow"><div class="customField"><label>Assignment title</label><input id="ctTitle" required placeholder="Example: Read the Water Cycle Passage"></div><div class="customField"><label>Due date</label><input id="ctDue" type="date"></div></div><div class="customTeacherRow"><div class="customField"><label>Estimated minutes</label><input id="ctMinutes" type="number" min="1" max="240" value="20"></div><div class="customField"><label>Connected lesson</label><select id="ctLesson"><option value="-1">No specific lesson</option>'+lessons.map((l,i)=>'<option value="'+i+'">'+(i+1)+'. '+esc(l[1])+'</option>').join('')+'</select></div></div><div class="customField"><label>Student instructions</label><textarea id="ctInstructions" placeholder="Read the passage, answer every question, and submit your work."></textarea></div><div class="customField"><label>Passage / reading</label><textarea id="ctPassage" placeholder="Write or paste the passage students should read..."></textarea></div><div class="customField"><label>Questions</label><div class="customQuestions" id="ctQuestions"></div><div class="customTeacherActions"><button type="button" class="todoBtn" id="ctAddQuestion">+ Add question</button></div></div><div class="customTeacherActions"><button type="submit" class="todoBtn primaryTodo">Publish assignment</button><button type="button" class="todoBtn" id="ctClear">Clear</button></div></form><div class="customPublishList" id="ctPublished"></div>';
-    ws.appendChild(card);
-    const qh=card.querySelector('#ctQuestions');addQuestion(qh);
-    card.querySelector('#ctAddQuestion').onclick=()=>{if(qh.children.length<12)addQuestion(qh);else alert('You can add up to 12 questions.');};
-    card.querySelector('#ctClear').onclick=()=>{card.querySelector('#customTeacherForm').reset();qh.innerHTML='';addQuestion(qh)};
-    card.querySelector('#customTeacherForm').onsubmit=e=>{
-      e.preventDefault();
-      const qs=[...qh.children].map(el=>{
-        const type=el.querySelector('[data-type]').value,q={type,prompt:el.querySelector('[data-prompt]').value.trim()};
-        if(type==='mc'){q.options=[0,1,2,3].map(i=>el.querySelector('[data-option="'+i+'"]')?.value.trim()||'');q.correct=Number(el.querySelector('[data-correct]').value)}
-        else q.answerKey=el.querySelector('[data-answer-key]')?.value.trim()||'';
-        return q;
-      }).filter(q=>q.prompt);
-      if(!qs.length){alert('Add at least one question.');return}
-      const a={id:'ca'+Date.now().toString(36),title:card.querySelector('#ctTitle').value.trim(),dueDate:card.querySelector('#ctDue').value,minutes:Number(card.querySelector('#ctMinutes').value)||20,lessonId:Number(card.querySelector('#ctLesson').value),instructions:card.querySelector('#ctInstructions').value.trim(),passage:card.querySelector('#ctPassage').value.trim(),questions:qs,customAssignment:true,createdAt:new Date().toISOString()};
-      assignments=assignments.filter(x=>x.id!==a.id);assignments.push(a);save();renderPublished();refreshStudentTodo();e.target.reset();qh.innerHTML='';addQuestion(qh);alert('Assignment published for students.');
-    };
-    renderPublished();
-  }
-
-  function renderPublished(){
-    const host=document.getElementById('ctPublished');if(!host)return;
-    const list=assignments.filter(custom).slice().reverse();
-    host.innerHTML='<div class="small">Your custom assignments</div>'+ (list.length?list.map(a=>'<article class="customPublishItem"><div class="customPublishTop"><div><h4>'+esc(a.title)+'</h4><p>'+esc(a.instructions||'No additional instructions.')+'</p></div><button class="todoBtn" data-delete-custom="'+esc(a.id)+'">Delete</button></div><div style="display:flex;gap:7px;flex-wrap:wrap;margin-top:8px"><span class="customPill">Custom</span><span class="customPill">'+a.questions.length+' question'+(a.questions.length===1?'':'s')+'</span><span class="customPill">'+(a.passage?'Passage':'No passage')+'</span><span class="customPill">'+esc(dateText(a.dueDate))+'</span></div></article>').join(''):'<div class="todoEmpty">You have not created a custom assignment yet.</div>');
-    host.querySelectorAll('[data-delete-custom]').forEach(b=>b.onclick=()=>{assignments=assignments.filter(a=>a.id!==b.dataset.deleteCustom);delete doneMap[b.dataset.deleteCustom];delete responses[b.dataset.deleteCustom];save();renderPublished();refreshStudentTodo()});
-  }
-
-  function refreshStudentTodo(){
-    const todo=document.getElementById('studentTodo');if(!todo)return;
-    let host=todo.querySelector('#customStudentAssignments');
-    if(!host){host=document.createElement('div');host.id='customStudentAssignments';host.className='customStudentList';const panel=todo.querySelector('.assignPanel');if(panel)panel.appendChild(host)}
-    const list=assignments.filter(custom);
-    host.innerHTML=list.length?'<div class="small">Teacher assignments</div>'+list.map(a=>{
-      const done=!!doneMap[a.id];
-      return '<article class="customStudentItem"><h3>'+esc(a.title)+'</h3><div class="todoInfo">'+esc(a.instructions||'Complete the assignment.')+'</div><div class="customStudentMeta"><span class="customPill">Custom assignment</span><span class="customPill">'+a.questions.length+' question'+(a.questions.length===1?'':'s')+'</span><span class="customPill">'+(done?'Submitted':'Due '+esc(dateText(a.dueDate)))+'</span></div><button class="customOpenBtn" data-open-custom="'+esc(a.id)+'">'+(done?'Review assignment':'Open assignment')+'</button></article>';
-    }).join(''):'';
-    host.querySelectorAll('[data-open-custom]').forEach(b=>b.onclick=()=>location.href='?assignment='+encodeURIComponent(b.dataset.openCustom));
-  }
-
-  function renderReader(id){
-    const a=assignments.find(x=>x.id===id&&custom(x));
-    if(!a){location.href='?page=studentTodo';return}
-    const prior=responses[id]?.answers||{};
-    document.body.innerHTML='<div class="customReader"><div class="customReaderNav"><div class="customReaderNavIn"><div class="customReaderBrand">SCIENCE <span>LAB 6</span></div><button class="customReaderBtn" onclick="location.href=\'?page=studentTodo\'">Back to To-Do</button></div></div><main class="customReaderMain"><div class="customReaderMeta">Teacher assignment</div><h1 class="customReaderTitle">'+esc(a.title)+'</h1><div class="customReaderSub">'+(a.dueDate?'Due '+esc(dateText(a.dueDate)):'No due date')+' • '+esc(String(a.minutes||20))+' minutes</div><section class="customReaderCard"><h2>Instructions</h2><p>'+esc(a.instructions||'Complete the work below and submit when you are finished.')+'</p>'+(a.passage?'<h2>Reading passage</h2><div class="customPassage">'+esc(a.passage)+'</div>':'')+'<div id="customReaderQuestions"></div><div class="customReaderActions"><button id="customSubmit" class="customReaderBtn primary">Submit assignment</button><button class="customReaderBtn" onclick="location.href=\'?page=studentTodo\'">Save and return later</button></div><div id="customReaderResult" class="customReaderResult"></div></section></main></div>';
-    const qh=document.getElementById('customReaderQuestions');
-    qh.innerHTML=a.questions.map((q,i)=>q.type==='mc'?'<div class="customReaderQuestion"><h3>Question '+(i+1)+'. '+esc(q.prompt)+'</h3>'+q.options.map((o,j)=>'<label><input type="radio" name="customQ'+i+'" value="'+j+'" '+(Number(prior[i])===j?'checked':'')+'> '+String.fromCharCode(65+j)+'. '+esc(o)+'</label>').join('')+'</div>':'<div class="customReaderQuestion"><h3>Question '+(i+1)+'. '+esc(q.prompt)+'</h3><textarea data-written="'+i+'" placeholder="Write your answer here...">'+esc(prior[i]||'')+'</textarea></div>').join('');
-    if(responses[id]?.submitted)document.getElementById('customReaderResult').innerHTML='<span class="customScore">Submitted.</span> You can review your answers below.';
-    document.getElementById('customSubmit').onclick=()=>{
-      const answers={},missing=[];
-      a.questions.forEach((q,i)=>{
-        if(q.type==='mc'){const pick=document.querySelector('input[name="customQ'+i+'"]:checked');if(!pick)missing.push(i);else answers[i]=Number(pick.value)}
-        else{const t=document.querySelector('[data-written="'+i+'"]');answers[i]=t?.value.trim()||'';if(!answers[i])missing.push(i)}
-      });
-      if(missing.length){document.getElementById('customReaderResult').textContent='Please answer every question before submitting.';return}
-      let auto=0,score=0;
-      a.questions.forEach((q,i)=>{if(q.type==='mc'){auto++;if(Number(answers[i])===Number(q.correct))score++}});
-      responses[id]={answers,submitted:true,submittedAt:new Date().toISOString(),autoScore:score,autoTotal:auto};doneMap[id]=true;save();
-      document.getElementById('customReaderResult').innerHTML='<span class="customScore">Assignment submitted.</span> '+(auto?'Multiple-choice score: '+score+'/'+auto+'. ':'')+'Written responses were saved on this device for teacher review.';
-    };
+      const goIdBtn=e.target.closest('button[onclick*="goId("]');
+      if(goIdBtn){
+        const m=(goIdBtn.getAttribute('onclick')||'').match(/goId\(['"]([^'"]+)['"]\)/);
+        if(m&&Object.values(pageMap).includes(m[1])){e.preventDefault();goPage(m[1]);}
+      }
+      const teacherBtn=e.target.closest('.navlinks button');
+      if(teacherBtn&&teacherBtn.textContent.trim()==='Teacher'){e.preventDefault();location.href='?page=teacher';}
+    },true);
   }
 
   function start(){
-    if(assignmentId){renderReader(assignmentId);return}
-    setTimeout(()=>{teacherBuilder();refreshStudentTodo()},900);
-    setTimeout(()=>{teacherBuilder();refreshStudentTodo()},1800);
-    setTimeout(()=>{teacherBuilder();refreshStudentTodo()},3000);
+    wireDynamicButtons();
+    setupNav();
+    const oldGo=window.go;
+    window.go=function(id){
+      if(pageMap[id]){goPage(pageMap[id]);return;}
+      if(typeof oldGo==='function')oldGo(id);
+    };
+    if(isLesson)return;
+    setTimeout(applyRoute,900);
+    setTimeout(applyRoute,1600);
+    setTimeout(applyRoute,2600);
   }
+  window.goPage=goPage;
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
 })();
 </script>
-
+<script>
+(function(){
+  function setupMenu(){
+    const toggle=document.getElementById('menuToggle'),links=document.querySelector('.navlinks'),scrim=document.getElementById('navScrim');
+    if(!toggle||!links||!scrim||toggle.dataset.bound)return;
+    toggle.dataset.bound='1';
+    const setOpen=open=>{links.classList.toggle('open',open);scrim.classList.toggle('open',open);toggle.setAttribute('aria-expanded',String(open));toggle.setAttribute('aria-label',open?'Close navigation':'Open navigation')};
+    toggle.addEventListener('click',()=>setOpen(!links.classList.contains('open')));
+    scrim.addEventListener('click',()=>setOpen(false));
+    links.addEventListener('click',e=>{if(e.target.closest('button'))setOpen(false)});
+    document.addEventListener('keydown',e=>{if(e.key==='Escape')setOpen(false)});
+  }
+  setupMenu();
+  window.addEventListener('load',setupMenu);
+})();
+</script>
 </body></html>
