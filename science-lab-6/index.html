@@ -365,7 +365,7 @@ let elapsed=0,timerId=null;function startTimer(){if(timerId)return;timerId=setIn
 })();
  </script>
 <script>window.addEventListener('load',()=>{setTimeout(()=>document.getElementById('siteLoader')?.classList.add('hide'),350)})</script>
-<script>(function(){const emojiRe=/[\u{1F000}-\u{1FAFF}\u{2300}-\u{23FF}\u{2600}-\u{27BF}]/gu;function clean(node){if(node.nodeType===3){node.nodeValue=node.nodeValue.replace(emojiRe,'')}else if(node.nodeType===1&&node.tagName!=='SCRIPT'&&node.tagName!=='STYLE'){for(const child of [...node.childNodes])clean(child)}}if(document.body)clean(document.body);new MutationObserver(m=>m.forEach(x=>{if(x.type==='characterData')clean(x.target);x.addedNodes?.forEach(clean)})).observe(document.body,{childList:true,subtree:true,characterData:true})})()</script>
+<script>/* Decorative emoji cleanup disabled to prevent observer loops. */</script>
 <script>
 (function(){
   function standaloneLesson(i){
