@@ -1053,7 +1053,11 @@ body.teacherUnlocked #assignmentWorkspace{display:block!important}
     document.getElementById('routeSub').textContent=sub;
     ids.forEach(sectionId=>{
       const target=document.getElementById(sectionId);
-      if(target){target.classList.remove('routeHidden');frame.appendChild(target);}
+      if(target){
+        target.classList.remove('routeHidden');
+        target.style.display='';
+        if(sectionId==='lessonView')target.style.display='block';
+      }
     });
   }
 
