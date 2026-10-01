@@ -74,7 +74,15 @@ footer{margin-left:0;max-width:none;padding:22px 30px;color:#6f7d8f;border-top:1
 .sl6InlineIcon,.sl6NavIcon{display:inline-flex;align-items:center;justify-content:center;color:var(--iconAccent);width:1.12em;height:1.12em;vertical-align:-.18em;flex:0 0 auto}.sl6InlineIcon svg,.sl6NavIcon svg{width:100%;height:100%;display:block;overflow:visible}.sl6InlineIcon{margin:0 .28em 0 .04em}.sl6NavIcon{width:18px;height:18px;margin-right:9px;vertical-align:-4px}.navlinks button{display:flex;align-items:center;gap:0}.menuLines i{background:var(--iconAccent)!important}.menuToggle{box-shadow:inset 0 0 0 1px rgba(250,204,21,.06)}.menuToggle:hover{border-color:var(--iconAccent)!important;box-shadow:0 0 0 3px rgba(250,204,21,.08)}button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:2px solid var(--iconAccent);outline-offset:2px}.lesson .icon{display:flex;align-items:center;justify-content:center;width:42px;height:42px;margin-bottom:2px;color:var(--iconAccent);background:#141e2b;border:1px solid #304057;border-radius:10px}.lesson .icon .sl6InlineIcon{width:22px;height:22px;margin:0}.lesson:hover .icon{border-color:var(--iconAccent);background:#1a2431}.sl6NavIcon{padding:3px;border-radius:5px}.navlinks button.active .sl6NavIcon,.navlinks button:hover .sl6NavIcon{color:var(--iconAccent)}
 .finalPolish{border-top:1px solid rgba(79,156,255,.15);margin-top:18px;padding-top:18px}
 </style>
-</head>
+<style id="teacher-page-polish">
+.teacherPage{min-height:100vh;background:#071019;padding:32px 20px 80px}
+.teacherFrame{max-width:1100px;margin:0 auto}
+.teacherToolsGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:28px}
+.teacherToolsGrid button{display:flex;flex-direction:column;align-items:flex-start;text-align:left;gap:7px;padding:22px;border:1px solid #26384c;background:#101a26;color:#f4f7fb;border-radius:14px;cursor:pointer}
+.teacherToolsGrid button:hover{border-color:#facc15;transform:translateY(-2px)}
+.teacherToolsGrid span{font-size:1.05rem;font-weight:700}.teacherToolsGrid small{color:#91a0b3;font-size:.82rem;line-height:1.45}
+@media(max-width:700px){.teacherToolsGrid{grid-template-columns:1fr}}
+</style></head>
 <style>
 #siteLoader{position:fixed;inset:0;z-index:9999;background:#111;display:flex;align-items:center;justify-content:center;text-align:center;transition:opacity .35s ease,visibility .35s ease;animation:loaderFallback .9s ease 1.35s forwards}#siteLoader.hide{opacity:0;visibility:hidden;pointer-events:none}.loaderBox{width:min(360px,90vw);padding:26px}.loaderMark{width:58px;height:58px;margin:0 auto 18px;border:4px solid #333;border-top-color:#facc15;border-radius:50%;animation:spin .8s linear infinite}.loaderTitle{font-weight:900;font-size:1.15rem;letter-spacing:.03em}.loaderSub{margin-top:7px;color:#b0b0b0;font-size:.88rem}@keyframes spin{to{transform:rotate(360deg)}}@keyframes loaderFallback{to{opacity:0;visibility:hidden;pointer-events:none}}
 </style>
@@ -978,9 +986,22 @@ body.teacherUnlocked #assignmentWorkspace{display:block!important}
 </style>
 <script>
 (function(){
+  function openTeacherTools(){
+    location.href=location.pathname+'?page=teacher';
+  }
+  function buildTeacherPage(){
+    if(document.getElementById('teacherPage'))return;
+    const page=document.createElement('main');
+    page.id='teacherPage';
+    page.className='teacherPage routeShell';
+    page.innerHTML='<div class="routeFrame teacherFrame"><button class="routeBack" onclick="location.href=location.pathname">← Back to Science Lab 6</button><div class="routeTitle">Teacher Tools</div><p class="routeSub">Plan, build, assign, and manage classroom science work.</p><div class="teacherToolsGrid"><button onclick="document.getElementById(\'assignmentWorkspace\')?.scrollIntoView({behavior:\'smooth\'})"><span>Lesson Maker</span><small>Create passages, questions, and assignments.</small></button><button onclick="document.getElementById(\'teacherPlanner\')?.scrollIntoView({behavior:\'smooth\'})"><span>Planner</span><small>Organize upcoming lessons and classroom tasks.</small></button><button onclick="document.getElementById(\'teacherIdeas\')?.scrollIntoView({behavior:\'smooth\'})"><span>Lesson Ideas</span><small>Quick ideas for activities, discussions, and practice.</small></button><button onclick="document.getElementById(\'teacherAssignments\')?.scrollIntoView({behavior:\'smooth\'})"><span>Assignments</span><small>Review and manage teacher-created work.</small></button></div></div></main>';
+    document.body.appendChild(page);
+  }
+
   const pageMap={
     Lessons:'lessons',
-    Quiz:'assessment'
+    Quiz:'assessment',
+    Teacher:'teacher'
   };
   const separatePages=new Set(['lessons','assessment','game']);
   const labels=Object.keys(pageMap);
@@ -1001,6 +1022,7 @@ body.teacherUnlocked #assignmentWorkspace{display:block!important}
   }
 
   function restoreHome(){
+    document.getElementById('teacherPage')?.remove();
     document.body.classList.remove('routePage');
     const shell=document.getElementById('routeShell');
     if(shell)shell.remove();
@@ -1038,7 +1060,7 @@ body.teacherUnlocked #assignmentWorkspace{display:block!important}
       const label=b.textContent.trim();
       if(b.dataset.routeBound)return;
       b.dataset.routeBound='1';
-      if(label==='Lessons'||label==='Quiz'){
+      if(label==='Lessons'||label==='Quiz'||label==='Teacher'){
         b.onclick=e=>{e.preventDefault();goPage(pageMap[label])};
       }else{
         b.onclick=e=>{
@@ -1054,6 +1076,12 @@ body.teacherUnlocked #assignmentWorkspace{display:block!important}
   function applyRoute(){
     setupNav();
     if(isLesson)return;
+    if(route==='teacher'){
+      restoreHome();
+      buildTeacherPage();
+      document.body.classList.add('routePage');
+      return;
+    }
     if(!separatePages.has(route)){
       restoreHome();
       return;
