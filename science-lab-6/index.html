@@ -446,6 +446,84 @@ let elapsed=0,timerId=null;function startTimer(){if(timerId)return;timerId=setIn
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(boot,450),{once:true});else setTimeout(boot,450);window.addEventListener('load',()=>setTimeout(sync,700));
 })();
 </script>
+<style>
+.assignPanel{background:linear-gradient(180deg,#101722,#0d141e);border:1px solid #293a50;border-radius:14px;padding:22px;box-shadow:0 18px 45px rgba(0,0,0,.2)}.assignGrid{display:grid;grid-template-columns:1.1fr .9fr;gap:14px}.assignForm{display:grid;grid-template-columns:1fr 1fr;gap:10px}.assignField{display:flex;flex-direction:column;gap:6px}.assignField.full{grid-column:1/-1}.assignField label{font-size:.76rem;font-weight:900;color:#aab8c8}.assignField input,.assignField select,.assignField textarea{width:100%;box-sizing:border-box;background:#0b131d;color:#f4f7fb;border:1px solid #304258;border-radius:8px;padding:10px 11px;font:inherit}.assignField textarea{min-height:110px;resize:vertical}.assignActions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.assignList{display:grid;gap:9px;margin-top:12px}.assignItem{padding:13px;border:1px solid #293a50;border-radius:9px;background:#111b28}.assignItemTop{display:flex;justify-content:space-between;gap:10px;align-items:start}.assignItem h3{margin:0;font-size:.92rem}.assignItem p{margin:5px 0 0;color:#8e9daf;font-size:.77rem;line-height:1.5}.assignMeta{display:flex;gap:7px;flex-wrap:wrap;margin-top:9px}.assignBadge{display:inline-flex;padding:4px 7px;border:1px solid #304258;border-radius:999px;color:#91a3b8;font-size:.66rem;font-weight:900}.assignBadge.due{color:#ffd86a;border-color:#62531a}.assignBadge.done{color:#86efac;border-color:#24543f}.todoList{display:grid;gap:10px}.todoItem{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;padding:15px;border:1px solid #2a3c52;background:#111b28;border-radius:10px}.todoCheck{width:20px;height:20px;accent-color:#4f9cff}.todoTitle{font-weight:900}.todoInfo{color:#8f9eaf;font-size:.75rem;margin-top:4px;line-height:1.45}.todoItem.done{opacity:.62}.todoItem.done .todoTitle{text-decoration:line-through}.todoActions{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}.todoBtn{border:1px solid #34485f;background:#152131;color:#fff;border-radius:7px;padding:8px 10px;font-size:.74rem;font-weight:900;cursor:pointer}.todoBtn:hover{border-color:#4f9cff}.todoBtn.primaryTodo{background:#4f9cff;color:#06101d;border-color:#4f9cff}.todoEmpty{padding:24px;text-align:center;border:1px dashed #33465d;border-radius:9px;color:#8291a5;background:#0f1722}.shareBox{margin-top:14px;padding:13px 14px;border:1px solid #2d4056;border-radius:9px;background:#0f1722}.shareBox b{font-size:.84rem}.shareBox p{margin:5px 0 0;color:#8e9daf;font-size:.75rem;line-height:1.5}.teacherNote{margin-top:12px;padding:11px 13px;border-left:3px solid #4f9cff;background:#111c29;color:#9eacbd;border-radius:7px;font-size:.77rem;line-height:1.5}.teacherStats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.teacherStat{padding:13px;border:1px solid #293a50;border-radius:8px;background:#111b28}.teacherStat b{display:block;font-size:1.25rem}.teacherStat span{display:block;color:#8594a7;font-size:.7rem;margin-top:3px}.assignSectionHead{display:flex;justify-content:space-between;gap:12px;align-items:end;margin-bottom:14px}.assignSectionHead h2{margin:0;font-size:1.55rem}.assignSectionHead p{margin:5px 0 0;color:#8f9eaf;font-size:.82rem}.classNameLine{display:flex;gap:8px;align-items:center}.classNameLine input{max-width:260px}@media(max-width:850px){.assignGrid{grid-template-columns:1fr}.assignForm{grid-template-columns:1fr}.assignField.full{grid-column:auto}.teacherStats{grid-template-columns:1fr 1fr}.todoItem{grid-template-columns:auto 1fr}.todoActions{grid-column:2;justify-content:flex-start}}@media(max-width:580px){.assignPanel{padding:17px}.teacherStats{grid-template-columns:1fr}.classNameLine{align-items:stretch;flex-direction:column}.classNameLine input{max-width:none}}
+</style>
+<script>
+(function(){
+  if(new URLSearchParams(location.search).has('lesson'))return;
+  const A='scienceLab6AssignmentsV1',D='scienceLab6AssignmentDoneV1',C='scienceLab6ClassNameV1';
+  let assignments=[],doneMap={},className='Science Lab 6 Class';
+  try{assignments=JSON.parse(localStorage.getItem(A)||'[]');if(!Array.isArray(assignments))assignments=[]}catch(e){assignments=[]}
+  try{doneMap=JSON.parse(localStorage.getItem(D)||'{}');if(!doneMap||typeof doneMap!=='object')doneMap={}}catch(e){doneMap={}}
+  try{className=localStorage.getItem(C)||className}catch(e){}
+  const save=()=>{try{localStorage.setItem(A,JSON.stringify(assignments));localStorage.setItem(D,JSON.stringify(doneMap));localStorage.setItem(C,className)}catch(e){}};
+  const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const fmtDate=d=>{if(!d)return 'No due date';const x=new Date(d+'T12:00:00');return Number.isNaN(x.getTime())?'No due date':x.toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'})};
+  const today=new Date();today.setHours(0,0,0,0);
+  const statusFor=a=>doneMap[a.id]?'completed':a.dueDate&&new Date(a.dueDate+'T23:59:59')<new Date()?'overdue':'todo';
+  const lessonIndex=a=>Number.isInteger(Number(a.lessonId))?Number(a.lessonId):-1;
+  function inject(){
+    const home=document.getElementById('home');if(!home||document.getElementById('assignmentWorkspace'))return;
+    const todo=document.createElement('section');todo.className='section';todo.id='studentTodo';
+    todo.innerHTML='<div class="assignPanel"><div class="assignSectionHead"><div><div class="proEyebrow">Student workspace</div><h2>To-Do</h2><p>Complete your in-class follow-up work, lesson review, and assignments in one place.</p></div><span class="proKicker" id="todoClassName">'+esc(className)+'</span></div><div class="teacherStats" id="todoStats"></div><div class="assignActions"><button class="todoBtn" data-todo-filter="all">All</button><button class="todoBtn" data-todo-filter="todo">To-do</button><button class="todoBtn" data-todo-filter="completed">Completed</button><button class="todoBtn" data-todo-filter="overdue">Overdue</button></div><div class="todoList" id="todoList" style="margin-top:12px"></div></div>';
+    home.after(todo);
+    const school=document.getElementById('schoolAccess');
+    const teacher=document.createElement('section');teacher.className='section';teacher.id='assignmentWorkspace';
+    teacher.innerHTML='<div class="assignPanel"><div class="assignSectionHead"><div><div class="proEyebrow">Teacher workspace</div><h2>Assignments & Classwork</h2><p>Create follow-up work for students after they finish in-class instruction.</p></div><span class="proKicker">TEACHER TOOLS</span></div><div class="assignGrid"><div><div class="classNameLine"><label class="small" for="classNameInput">Class name</label><input id="classNameInput" value="'+esc(className)+'" placeholder="Example: Grade 6 Science"></div><div class="teacherNote">This version is a working classroom prototype. Assignments are stored in the browser. Use <b>Share class link</b> to send a class snapshot to student devices. A later database + school sign-in connection can make assignments truly live across the district.</div><form class="assignForm" id="assignmentForm" style="margin-top:14px"><div class="assignField"><label for="assignTitle">Assignment title</label><input id="assignTitle" required placeholder="Example: Finish Lesson 4 review"></div><div class="assignField"><label for="assignLesson">Connected lesson</label><select id="assignLesson"><option value="-1">No specific lesson</option>'+lessons.map((l,i)=>'<option value="'+i+'">'+(i+1)+'. '+esc(l[1])+'</option>').join('')+'</select></div><div class="assignField"><label for="assignDue">Due date</label><input id="assignDue" type="date"></div><div class="assignField"><label for="assignMinutes">Estimated minutes</label><input id="assignMinutes" type="number" min="1" max="240" value="15"></div><div class="assignField full"><label for="assignInstructions">Instructions</label><textarea id="assignInstructions" placeholder="Tell students what to complete after class..."></textarea></div><div class="assignActions full"><button class="todoBtn primaryTodo" type="submit">Publish assignment</button><button class="todoBtn" type="button" id="clearAssignForm">Clear</button></div></form></div><div><div class="teacherStats"><div class="teacherStat"><b id="teacherCount">0</b><span>Assignments posted</span></div><div class="teacherStat"><b id="teacherDone">0</b><span>Marked complete</span></div><div class="teacherStat"><b id="teacherOpen">0</b><span>Still to-do</span></div></div><div class="assignActions"><button class="todoBtn primaryTodo" id="shareClass">Share class link</button><button class="todoBtn" id="resetClass">Reset assignments</button></div><div class="shareBox"><b>How students receive work</b><p>Publish assignments here, then copy the class link. When a student opens that link, the assignment list is imported into their Science Lab 6 To-Do page.</p></div><div class="assignList" id="teacherAssignList"></div></div></div></div>';
+    (school||document.querySelector('main')).before(teacher);
+    const nav=document.querySelector('.navlinks');
+    if(nav){[['To-Do','studentTodo'],['Teacher','assignmentWorkspace']].forEach(([label,id])=>{if(![...nav.children].some(b=>b.textContent.trim()===label)){const b=document.createElement('button');b.textContent=label;b.onclick=()=>document.getElementById(id)?.scrollIntoView({behavior:'smooth',block:'start'});nav.appendChild(b)}})}
+    wire();
+    renderTodo('all');
+    renderTeacher();
+    importFromHash();
+  }
+  function renderTodo(filter){
+    const list=document.getElementById('todoList'),stats=document.getElementById('todoStats');if(!list)return;
+    const normalized=assignments.slice().sort((a,b)=>(a.dueDate||'9999-12-31').localeCompare(b.dueDate||'9999-12-31'));
+    const visible=normalized.filter(a=>filter==='all'||statusFor(a)===filter);
+    const total=assignments.length,complete=assignments.filter(a=>doneMap[a.id]).length,overdue=assignments.filter(a=>statusFor(a)==='overdue'&&!doneMap[a.id]).length;
+    if(stats)stats.innerHTML='<div class="teacherStat"><b>'+total+'</b><span>Assignments</span></div><div class="teacherStat"><b>'+complete+'</b><span>Completed</span></div><div class="teacherStat"><b>'+(total-complete)+'</b><span>Remaining</span></div>';
+    document.querySelectorAll('[data-todo-filter]').forEach(b=>b.style.borderColor=b.dataset.todoFilter===filter?'#4f9cff':'#34485f');
+    if(!visible.length){list.innerHTML='<div class="todoEmpty">'+(filter==='completed'?'No completed assignments yet.':overdue&&filter==='overdue'?'No overdue assignments.':'Your teacher has not posted any assignments here yet.')+'</div>';return}
+    list.innerHTML=visible.map(a=>{const s=statusFor(a),li=lessonIndex(a),due=s==='overdue'?'Overdue • '+fmtDate(a.dueDate):fmtDate(a.dueDate);return '<article class="todoItem '+(s==='completed'?'done':'')+'"><input class="todoCheck" type="checkbox" '+(s==='completed'?'checked':'')+' aria-label="Mark '+esc(a.title)+' complete" data-done="'+esc(a.id)+'"><div><div class="todoTitle">'+esc(a.title)+'</div><div class="todoInfo">'+esc(a.instructions||'Follow the teacher instructions.')+'</div><div class="assignMeta"><span class="assignBadge">'+(li>=0?'Lesson '+(li+1):'Classwork')+'</span><span class="assignBadge '+(s==='overdue'?'due':'')+'">'+esc(due)+'</span><span class="assignBadge">'+esc(String(a.minutes||15))+' min</span></div></div><div class="todoActions">'+(li>=0?'<button class="todoBtn primaryTodo" data-open-lesson="'+li+'">Open lesson</button>':'')+'</div></article>'}).join('');
+    list.querySelectorAll('[data-done]').forEach(b=>b.onchange=()=>{const id=b.dataset.done;doneMap[id]=b.checked;save();renderTodo(filter);renderTeacher()});
+    list.querySelectorAll('[data-open-lesson]').forEach(b=>b.onclick=()=>{const i=Number(b.dataset.openLesson);if(typeof openLesson==='function'){openLesson(i);setTimeout(()=>document.getElementById('lessonView')?.scrollIntoView({behavior:'smooth'}),80)}});
+  }
+  function renderTeacher(){
+    const list=document.getElementById('teacherAssignList');if(!list)return;
+    document.getElementById('teacherCount').textContent=assignments.length;
+    document.getElementById('teacherDone').textContent=assignments.filter(a=>doneMap[a.id]).length;
+    document.getElementById('teacherOpen').textContent=assignments.filter(a=>!doneMap[a.id]).length;
+    document.getElementById('classNameInput').value=className;
+    document.getElementById('todoClassName').textContent=className;
+    if(!assignments.length){list.innerHTML='<div class="todoEmpty">No assignments posted yet. Create the first classwork item above.</div>';return}
+    list.innerHTML=assignments.slice().reverse().map(a=>{const li=lessonIndex(a),done=!!doneMap[a.id];return '<article class="assignItem"><div class="assignItemTop"><div><h3>'+esc(a.title)+'</h3><p>'+esc(a.instructions||'No additional instructions.')+'</p></div><button class="todoBtn" data-remove="'+esc(a.id)+'">Delete</button></div><div class="assignMeta"><span class="assignBadge">'+(li>=0?'Lesson '+(li+1):'Classwork')+'</span><span class="assignBadge">'+esc(fmtDate(a.dueDate))+'</span><span class="assignBadge '+(done?'done':'')+'">'+(done?'Complete':'Open')+'</span></div></article>'}).join('');
+    list.querySelectorAll('[data-remove]').forEach(b=>b.onclick=()=>{assignments=assignments.filter(a=>a.id!==b.dataset.remove);delete doneMap[b.dataset.remove];save();renderTodo('all');renderTeacher()});
+  }
+  function wire(){
+    document.getElementById('assignmentForm')?.addEventListener('submit',e=>{e.preventDefault();const title=document.getElementById('assignTitle').value.trim();if(!title)return;const a={id:'a'+Date.now().toString(36),title,lessonId:Number(document.getElementById('assignLesson').value),dueDate:document.getElementById('assignDue').value,minutes:Number(document.getElementById('assignMinutes').value)||15,instructions:document.getElementById('assignInstructions').value.trim(),createdAt:new Date().toISOString()};assignments.push(a);save();e.target.reset();document.getElementById('assignMinutes').value=15;renderTodo('all');renderTeacher();document.getElementById('studentTodo')?.scrollIntoView({behavior:'smooth',block:'start'})});
+    document.getElementById('clearAssignForm')?.addEventListener('click',()=>document.getElementById('assignmentForm')?.reset());
+    document.getElementById('classNameInput')?.addEventListener('change',e=>{className=e.target.value.trim()||'Science Lab 6 Class';save();renderTodo('all');renderTeacher()});
+    document.querySelectorAll('[data-todo-filter]').forEach(b=>b.onclick=()=>renderTodo(b.dataset.todoFilter));
+    document.getElementById('shareClass')?.addEventListener('click',shareClass);
+    document.getElementById('resetClass')?.addEventListener('click',()=>{if(!confirm('Remove all posted assignments from this browser?'))return;assignments=[];doneMap={};save();renderTodo('all');renderTeacher()});
+  }
+  function shareClass(){
+    const payload={version:1,className,assignments};
+    const raw=btoa(unescape(encodeURIComponent(JSON.stringify(payload)))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+    const url=location.origin+location.pathname+'#class='+raw;
+    navigator.clipboard?.writeText(url).then(()=>{const b=document.getElementById('shareClass');if(b){b.textContent='Class link copied';setTimeout(()=>b.textContent='Share class link',1800)}}).catch(()=>{prompt('Copy this class link:',url)});
+  }
+  function importFromHash(){
+    const match=location.hash.match(/^#class=([A-Za-z0-9_-]+)$/);if(!match)return;
+    try{let s=match[1].replace(/-/g,'+').replace(/_/g,'/');s+='='.repeat((4-s.length%4)%4);const data=JSON.parse(decodeURIComponent(escape(atob(s))));if(!data||data.version!==1||!Array.isArray(data.assignments))return;assignments=data.assignments.filter(a=>a&&a.id&&a.title);className=data.className||className;save();history.replaceState(null,'',location.pathname);renderTodo('all');renderTeacher();document.getElementById('studentTodo')?.scrollIntoView({behavior:'smooth',block:'start'})}catch(e){console.warn('Science Lab 6 class import failed',e)} 
+  }
+  window.addEventListener('load',()=>setTimeout(inject,850));
+  if(document.readyState!=='loading')setTimeout(inject,850);
+})();
+</script>
 </body></html>
 <script>
 (function(){
