@@ -878,4 +878,169 @@ body.teacherUnlocked #assignmentWorkspace{display:block!important}
   document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSpaceGame()});
 })();
 </script>
+
+<style>
+.customTeacherCard{margin-top:14px;padding:20px;background:#0f1722;border:1px solid #2d4056;border-radius:10px}
+.customTeacherHead{display:flex;justify-content:space-between;align-items:end;gap:12px;margin-bottom:16px}
+.customTeacherHead h3{margin:0;font-size:1.1rem}
+.customTeacherHead p{margin:5px 0 0;color:#8f9eaf;font-size:.78rem;line-height:1.5}
+.customTeacherForm{display:grid;gap:12px}
+.customTeacherRow{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.customField{display:flex;flex-direction:column;gap:6px}
+.customField.full{grid-column:1/-1}
+.customField label{font-size:.74rem;font-weight:900;color:#aab8c8}
+.customField input,.customField select,.customField textarea{width:100%;box-sizing:border-box;background:#0b131d;color:#f4f7fb;border:1px solid #304258;border-radius:8px;padding:10px 11px;font:inherit}
+.customField textarea{min-height:110px;resize:vertical}
+.customQuestions{display:grid;gap:10px}
+.customQuestion{padding:15px;border:1px solid #293a50;border-radius:9px;background:#111b28}
+.customQuestionHeader{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.customQuestionHeader b{font-size:.8rem}
+.customQuestionGrid{display:grid;grid-template-columns:1.35fr .65fr;gap:10px;margin-top:10px}
+.customOptions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.customQuestion input,.customQuestion select,.customQuestion textarea{width:100%;box-sizing:border-box;background:#0b131d;color:#f4f7fb;border:1px solid #304258;border-radius:7px;padding:9px;font:inherit}
+.customQuestion textarea{min-height:78px;resize:vertical}
+.customTeacherActions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.customPublishList{display:grid;gap:9px;margin-top:14px}
+.customPublishItem{padding:13px;border:1px solid #293a50;background:#111b28;border-radius:9px}
+.customPublishTop{display:flex;justify-content:space-between;gap:10px;align-items:start}
+.customPublishItem h4{margin:0;font-size:.9rem}
+.customPublishItem p{margin:5px 0 0;color:#8e9daf;font-size:.75rem;line-height:1.45}
+.customPill{display:inline-flex;padding:4px 7px;border:1px solid #34485f;border-radius:999px;color:#9fb0c3;font-size:.64rem;font-weight:900}
+.customStudentList{margin-top:14px}
+.customStudentItem{padding:15px;border:1px solid #2a3c52;background:#111b28;border-radius:10px;margin-top:10px}
+.customStudentItem h3{margin:0;font-size:.92rem}
+.customStudentMeta{display:flex;gap:7px;flex-wrap:wrap;margin-top:8px}
+.customOpenBtn{margin-top:11px;border:1px solid #4f9cff;background:#4f9cff;color:#06101d;border-radius:7px;padding:9px 12px;font-size:.74rem;font-weight:900;cursor:pointer}
+.customReader{min-height:100vh;background:#080e16;color:#f5f7fa;font-family:Inter,system-ui,sans-serif}
+.customReaderNav{padding:15px 22px;border-bottom:1px solid #28384c;background:#0c141f}
+.customReaderNavIn{max-width:920px;margin:auto;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.customReaderBrand{font-weight:900;letter-spacing:.08em}.customReaderBrand span{color:#4f9cff}
+.customReaderMain{max-width:920px;margin:auto;padding:38px 22px 80px}
+.customReaderMeta{color:#7db8ff;font-size:.72rem;text-transform:uppercase;letter-spacing:.1em;font-weight:900}
+.customReaderTitle{font-size:clamp(2.2rem,6vw,4rem);letter-spacing:-.045em;line-height:1;margin:9px 0}
+.customReaderSub{color:#96a5b6}
+.customReaderCard{margin-top:24px;padding:24px;background:#111b27;border:1px solid #2a3a4e;border-radius:12px}
+.customReaderCard h2{font-size:1.05rem;margin:0 0 9px}
+.customReaderCard p{color:#d4dce7;line-height:1.75}
+.customPassage{white-space:pre-wrap;padding:17px;background:#0b141f;border:1px solid #29394d;border-radius:8px;color:#d7e0ea;line-height:1.8}
+.customReaderQuestion{margin-top:17px;padding:15px;background:#152131;border:1px solid #2b3d52;border-radius:8px}
+.customReaderQuestion h3{margin:0 0 8px;font-size:.95rem}
+.customReaderQuestion label{display:block;margin-top:7px;padding:10px;border:1px solid #34485f;background:#0b131d;border-radius:7px;cursor:pointer}
+.customReaderQuestion textarea{width:100%;min-height:115px;box-sizing:border-box;background:#0b131d;color:#fff;border:1px solid #34485f;border-radius:7px;padding:10px;font:inherit;resize:vertical}
+.customReaderActions{display:flex;gap:8px;flex-wrap:wrap;margin-top:17px}
+.customReaderBtn{border:1px solid #34485f;background:#152131;color:#fff;border-radius:7px;padding:10px 13px;font-weight:900;cursor:pointer}
+.customReaderBtn.primary{background:#4f9cff;color:#06101d;border-color:#4f9cff}
+.customReaderResult{margin-top:12px;padding:11px 13px;border-radius:8px;background:#141f2d;color:#b5c1d0;line-height:1.55}
+.customScore{color:#86efac;font-weight:900}
+@media(max-width:700px){.customTeacherRow,.customQuestionGrid,.customOptions{grid-template-columns:1fr}.customField.full{grid-column:auto}.customReaderMain{padding:28px 14px 60px}.customReaderCard{padding:19px}}
+</style>
+<script>
+(function(){
+  const A='scienceLab6AssignmentsV1',D='scienceLab6AssignmentDoneV1',R='scienceLab6CustomResponsesV1';
+  let assignments=[],doneMap={},responses={};
+  const read=(k,f)=>{try{const v=JSON.parse(localStorage.getItem(k)||'');return v??f}catch(e){return f}};
+  assignments=read(A,[]);if(!Array.isArray(assignments))assignments=[];
+  doneMap=read(D,{});if(!doneMap||typeof doneMap!=='object')doneMap={};
+  responses=read(R,{});if(!responses||typeof responses!=='object')responses={};
+  const save=()=>{try{localStorage.setItem(A,JSON.stringify(assignments));localStorage.setItem(D,JSON.stringify(doneMap));localStorage.setItem(R,JSON.stringify(responses))}catch(e){}};
+  const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const custom=a=>!!a?.customAssignment;
+  const dateText=d=>{if(!d)return'No due date';const x=new Date(d+'T12:00:00');return Number.isNaN(x.getTime())?'No due date':x.toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'})};
+  const params=new URLSearchParams(location.search);
+  const assignmentId=params.get('assignment');
+
+  function addQuestion(host,data){
+    const n=host.children.length+1;
+    const q=data||{type:'mc',prompt:'',options:['','','',''],correct:0,answerKey:''};
+    const el=document.createElement('div');el.className='customQuestion';
+    el.innerHTML='<div class="customQuestionHeader"><b>Question '+n+'</b><button type="button" class="todoBtn" data-remove-custom-question>Remove</button></div><div class="customQuestionGrid"><div class="customField"><label>Question prompt</label><textarea data-prompt placeholder="Write the question...">'+esc(q.prompt)+'</textarea></div><div class="customField"><label>Question type</label><select data-type><option value="mc" '+(q.type==='mc'?'selected':'')+'>Multiple choice</option><option value="written" '+(q.type==='written'?'selected':'')+'>Written response</option></select></div></div><div data-question-body></div>';
+    host.appendChild(el);
+    const type=el.querySelector('[data-type]'),body=el.querySelector('[data-question-body]');
+    const draw=()=>{
+      if(type.value==='mc'){
+        body.innerHTML='<div class="customOptions">'+[0,1,2,3].map(i=>'<input data-option="'+i+'" placeholder="Choice '+String.fromCharCode(65+i)+'" value="'+esc(q.options?.[i]||'')+'">').join('')+'</div><div class="customField" style="margin-top:8px"><label>Correct choice</label><select data-correct>'+[0,1,2,3].map(i=>'<option value="'+i+'" '+(Number(q.correct)===i?'selected':'')+'>'+String.fromCharCode(65+i)+'</option>').join('')+'</select></div>';
+      }else{
+        body.innerHTML='<div class="customField" style="margin-top:8px"><label>Teacher answer key <span style="font-weight:600;color:#75879b">(optional)</span></label><textarea data-answer-key placeholder="What should a good response include?">'+esc(q.answerKey||'')+'</textarea></div>';
+      }
+    };
+    draw();
+    type.onchange=draw;
+    el.querySelector('[data-remove-custom-question]').onclick=()=>{el.remove();[...host.children].forEach((x,i)=>x.querySelector('.customQuestionHeader b').textContent='Question '+(i+1))};
+  }
+
+  function teacherBuilder(){
+    const ws=document.getElementById('assignmentWorkspace');
+    if(!ws||document.getElementById('customTeacherBuilder'))return;
+    const card=document.createElement('section');card.id='customTeacherBuilder';card.className='customTeacherCard';
+    card.innerHTML='<div class="customTeacherHead"><div><h3>Create your own assignment</h3><p>Build a passage, questions, instructions, and a due date. Students get a separate assignment page from their To-Do list.</p></div><span class="proKicker">CUSTOM ASSIGNMENT</span></div><form class="customTeacherForm" id="customTeacherForm"><div class="customTeacherRow"><div class="customField"><label>Assignment title</label><input id="ctTitle" required placeholder="Example: Read the Water Cycle Passage"></div><div class="customField"><label>Due date</label><input id="ctDue" type="date"></div></div><div class="customTeacherRow"><div class="customField"><label>Estimated minutes</label><input id="ctMinutes" type="number" min="1" max="240" value="20"></div><div class="customField"><label>Connected lesson</label><select id="ctLesson"><option value="-1">No specific lesson</option>'+lessons.map((l,i)=>'<option value="'+i+'">'+(i+1)+'. '+esc(l[1])+'</option>').join('')+'</select></div></div><div class="customField"><label>Student instructions</label><textarea id="ctInstructions" placeholder="Read the passage, answer every question, and submit your work."></textarea></div><div class="customField"><label>Passage / reading</label><textarea id="ctPassage" placeholder="Write or paste the passage students should read..."></textarea></div><div class="customField"><label>Questions</label><div class="customQuestions" id="ctQuestions"></div><div class="customTeacherActions"><button type="button" class="todoBtn" id="ctAddQuestion">+ Add question</button></div></div><div class="customTeacherActions"><button type="submit" class="todoBtn primaryTodo">Publish assignment</button><button type="button" class="todoBtn" id="ctClear">Clear</button></div></form><div class="customPublishList" id="ctPublished"></div>';
+    ws.appendChild(card);
+    const qh=card.querySelector('#ctQuestions');addQuestion(qh);
+    card.querySelector('#ctAddQuestion').onclick=()=>{if(qh.children.length<12)addQuestion(qh);else alert('You can add up to 12 questions.');};
+    card.querySelector('#ctClear').onclick=()=>{card.querySelector('#customTeacherForm').reset();qh.innerHTML='';addQuestion(qh)};
+    card.querySelector('#customTeacherForm').onsubmit=e=>{
+      e.preventDefault();
+      const qs=[...qh.children].map(el=>{
+        const type=el.querySelector('[data-type]').value,q={type,prompt:el.querySelector('[data-prompt]').value.trim()};
+        if(type==='mc'){q.options=[0,1,2,3].map(i=>el.querySelector('[data-option="'+i+'"]')?.value.trim()||'');q.correct=Number(el.querySelector('[data-correct]').value)}
+        else q.answerKey=el.querySelector('[data-answer-key]')?.value.trim()||'';
+        return q;
+      }).filter(q=>q.prompt);
+      if(!qs.length){alert('Add at least one question.');return}
+      const a={id:'ca'+Date.now().toString(36),title:card.querySelector('#ctTitle').value.trim(),dueDate:card.querySelector('#ctDue').value,minutes:Number(card.querySelector('#ctMinutes').value)||20,lessonId:Number(card.querySelector('#ctLesson').value),instructions:card.querySelector('#ctInstructions').value.trim(),passage:card.querySelector('#ctPassage').value.trim(),questions:qs,customAssignment:true,createdAt:new Date().toISOString()};
+      assignments=assignments.filter(x=>x.id!==a.id);assignments.push(a);save();renderPublished();refreshStudentTodo();e.target.reset();qh.innerHTML='';addQuestion(qh);alert('Assignment published for students.');
+    };
+    renderPublished();
+  }
+
+  function renderPublished(){
+    const host=document.getElementById('ctPublished');if(!host)return;
+    const list=assignments.filter(custom).slice().reverse();
+    host.innerHTML='<div class="small">Your custom assignments</div>'+ (list.length?list.map(a=>'<article class="customPublishItem"><div class="customPublishTop"><div><h4>'+esc(a.title)+'</h4><p>'+esc(a.instructions||'No additional instructions.')+'</p></div><button class="todoBtn" data-delete-custom="'+esc(a.id)+'">Delete</button></div><div style="display:flex;gap:7px;flex-wrap:wrap;margin-top:8px"><span class="customPill">Custom</span><span class="customPill">'+a.questions.length+' question'+(a.questions.length===1?'':'s')+'</span><span class="customPill">'+(a.passage?'Passage':'No passage')+'</span><span class="customPill">'+esc(dateText(a.dueDate))+'</span></div></article>').join(''):'<div class="todoEmpty">You have not created a custom assignment yet.</div>');
+    host.querySelectorAll('[data-delete-custom]').forEach(b=>b.onclick=()=>{assignments=assignments.filter(a=>a.id!==b.dataset.deleteCustom);delete doneMap[b.dataset.deleteCustom];delete responses[b.dataset.deleteCustom];save();renderPublished();refreshStudentTodo()});
+  }
+
+  function refreshStudentTodo(){
+    const todo=document.getElementById('studentTodo');if(!todo)return;
+    let host=todo.querySelector('#customStudentAssignments');
+    if(!host){host=document.createElement('div');host.id='customStudentAssignments';host.className='customStudentList';const panel=todo.querySelector('.assignPanel');if(panel)panel.appendChild(host)}
+    const list=assignments.filter(custom);
+    host.innerHTML=list.length?'<div class="small">Teacher assignments</div>'+list.map(a=>{
+      const done=!!doneMap[a.id];
+      return '<article class="customStudentItem"><h3>'+esc(a.title)+'</h3><div class="todoInfo">'+esc(a.instructions||'Complete the assignment.')+'</div><div class="customStudentMeta"><span class="customPill">Custom assignment</span><span class="customPill">'+a.questions.length+' question'+(a.questions.length===1?'':'s')+'</span><span class="customPill">'+(done?'Submitted':'Due '+esc(dateText(a.dueDate)))+'</span></div><button class="customOpenBtn" data-open-custom="'+esc(a.id)+'">'+(done?'Review assignment':'Open assignment')+'</button></article>';
+    }).join(''):'';
+    host.querySelectorAll('[data-open-custom]').forEach(b=>b.onclick=()=>location.href='?assignment='+encodeURIComponent(b.dataset.openCustom));
+  }
+
+  function renderReader(id){
+    const a=assignments.find(x=>x.id===id&&custom(x));
+    if(!a){location.href='?page=studentTodo';return}
+    const prior=responses[id]?.answers||{};
+    document.body.innerHTML='<div class="customReader"><div class="customReaderNav"><div class="customReaderNavIn"><div class="customReaderBrand">SCIENCE <span>LAB 6</span></div><button class="customReaderBtn" onclick="location.href=\'?page=studentTodo\'">Back to To-Do</button></div></div><main class="customReaderMain"><div class="customReaderMeta">Teacher assignment</div><h1 class="customReaderTitle">'+esc(a.title)+'</h1><div class="customReaderSub">'+(a.dueDate?'Due '+esc(dateText(a.dueDate)):'No due date')+' • '+esc(String(a.minutes||20))+' minutes</div><section class="customReaderCard"><h2>Instructions</h2><p>'+esc(a.instructions||'Complete the work below and submit when you are finished.')+'</p>'+(a.passage?'<h2>Reading passage</h2><div class="customPassage">'+esc(a.passage)+'</div>':'')+'<div id="customReaderQuestions"></div><div class="customReaderActions"><button id="customSubmit" class="customReaderBtn primary">Submit assignment</button><button class="customReaderBtn" onclick="location.href=\'?page=studentTodo\'">Save and return later</button></div><div id="customReaderResult" class="customReaderResult"></div></section></main></div>';
+    const qh=document.getElementById('customReaderQuestions');
+    qh.innerHTML=a.questions.map((q,i)=>q.type==='mc'?'<div class="customReaderQuestion"><h3>Question '+(i+1)+'. '+esc(q.prompt)+'</h3>'+q.options.map((o,j)=>'<label><input type="radio" name="customQ'+i+'" value="'+j+'" '+(Number(prior[i])===j?'checked':'')+'> '+String.fromCharCode(65+j)+'. '+esc(o)+'</label>').join('')+'</div>':'<div class="customReaderQuestion"><h3>Question '+(i+1)+'. '+esc(q.prompt)+'</h3><textarea data-written="'+i+'" placeholder="Write your answer here...">'+esc(prior[i]||'')+'</textarea></div>').join('');
+    if(responses[id]?.submitted)document.getElementById('customReaderResult').innerHTML='<span class="customScore">Submitted.</span> You can review your answers below.';
+    document.getElementById('customSubmit').onclick=()=>{
+      const answers={},missing=[];
+      a.questions.forEach((q,i)=>{
+        if(q.type==='mc'){const pick=document.querySelector('input[name="customQ'+i+'"]:checked');if(!pick)missing.push(i);else answers[i]=Number(pick.value)}
+        else{const t=document.querySelector('[data-written="'+i+'"]');answers[i]=t?.value.trim()||'';if(!answers[i])missing.push(i)}
+      });
+      if(missing.length){document.getElementById('customReaderResult').textContent='Please answer every question before submitting.';return}
+      let auto=0,score=0;
+      a.questions.forEach((q,i)=>{if(q.type==='mc'){auto++;if(Number(answers[i])===Number(q.correct))score++}});
+      responses[id]={answers,submitted:true,submittedAt:new Date().toISOString(),autoScore:score,autoTotal:auto};doneMap[id]=true;save();
+      document.getElementById('customReaderResult').innerHTML='<span class="customScore">Assignment submitted.</span> '+(auto?'Multiple-choice score: '+score+'/'+auto+'. ':'')+'Written responses were saved on this device for teacher review.';
+    };
+  }
+
+  function start(){
+    if(assignmentId){renderReader(assignmentId);return}
+    setTimeout(()=>{teacherBuilder();refreshStudentTodo()},900);
+    setTimeout(()=>{teacherBuilder();refreshStudentTodo()},1800);
+    setTimeout(()=>{teacherBuilder();refreshStudentTodo()},3000);
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
+})();
+</script>
+
 </body></html>
