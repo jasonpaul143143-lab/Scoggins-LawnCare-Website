@@ -380,6 +380,17 @@ let elapsed=0,timerId=null;function startTimer(){if(timerId)return;timerId=setIn
   if(v!==null){const i=Number(v);if(Number.isInteger(i)&&lessons[i])standaloneLesson(i)}
 })();
 </script>
+<script>
+(function(){
+  function releaseLoader(){
+    const loader=document.getElementById('siteLoader');
+    if(loader)loader.remove();
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',releaseLoader,{once:true});
+  else releaseLoader();
+  setTimeout(releaseLoader,1500);
+})();
+</script>
 </body></html>
 <script>
 (function(){
