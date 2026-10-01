@@ -180,7 +180,7 @@ function openLesson(i){const x=lessons[i],n=lessonNotes[i];const category=x[2].r
 function closeLesson(){document.getElementById('lessonView').style.display='none';document.getElementById('lessons').style.display='block';document.getElementById('lessons').scrollIntoView({behavior:'smooth',block:'start'})}
 function complete(i){if(!completed.includes(i))completed.push(i);else completed=completed.filter(x=>x!==i);localStorage.setItem('science6done',JSON.stringify(completed));updateProgress();renderLessons(document.querySelector('.filter.on').dataset.filter)}
 function updateProgress(){const p=Math.round(completed.length/lessons.length*100);document.getElementById('pct').textContent=p+'%';document.getElementById('bar').style.width=p+'%';document.getElementById('progressText').textContent=`${completed.length} of ${lessons.length} lessons completed`}
-function go(id){if(id!=='lessonView'&&document.getElementById('lessonView').style.display!=='none'){document.getElementById('lessonView').style.display='none';document.getElementById('lessons').style.display='block'}const target=document.getElementById(id);if(target)target.scrollIntoView({behavior:'smooth',block:'start'})}
+function go(id){if(id==='lessons'||id==='quiz'||id==='game'){location.href=location.pathname+'?page='+(id==='quiz'?'assessment':id);return}if(id==='teacher'){location.href=location.pathname+'?page=teacher';return}if(id==='lessonView'&&document.getElementById('lessonView')){document.getElementById('lessonView').style.display='block'}const target=document.getElementById(id);if(target)target.scrollIntoView({behavior:'smooth',block:'start'})}
 function copyLaunchUrl(){const url=location.origin+location.pathname;navigator.clipboard?.writeText(url).then(()=>{const t=document.getElementById('launchUrlText');if(t)t.textContent='Copied: '+url}).catch(()=>{const t=document.getElementById('launchUrlText');if(t)t.textContent=url+' (select and copy)'})}
 document.getElementById('launchUrlText')?.replaceChildren(document.createTextNode(location.origin+location.pathname));
 document.querySelectorAll('.filter').forEach(b=>b.onclick=()=>{document.querySelectorAll('.filter').forEach(x=>x.classList.remove('on'));b.classList.add('on');renderLessons(b.dataset.filter)});
@@ -443,8 +443,10 @@ let elapsed=0,timerId=null;function startTimer(){if(timerId)return;timerId=setIn
     if(new URLSearchParams(location.search).has('lesson')||document.body.dataset.proReady)return;
     document.body.dataset.proReady='1';
     const nav=document.querySelector('.navlinks');
-    if(nav){[['Practice','proPractice'],['Curriculum','proCurriculum'],['Labs','lab'],['Progress','dashboard'],['School','schoolAccess']].forEach(x=>{if(![...nav.children].some(b=>b.textContent.trim()===x[0])){const b=document.createElement('button');b.textContent=x[0];b.onclick=()=>goId(x[1]);nav.appendChild(b)}})}
+    if(nav){[['Practice','proPractice'],['Curriculum','proCurriculum'],['Labs','lab'],['Progress','dashboard'],['School','schoolAccess'],['Teacher Tools','teacher']].forEach(x=>{if(![...nav.children].some(b=>b.textContent.trim()===x[0])){const b=document.createElement('button');b.textContent=x[0];b.onclick=()=>goId(x[1]);nav.appendChild(b)}})}
     const home=document.getElementById('home');
+    const homeLessons=document.getElementById('lessons');
+    if(homeLessons)homeLessons.classList.add('homeHiddenLessons');
     if(home&&!document.getElementById('proContinue')){const s=document.createElement('section');s.id='proContinue';s.className='section';s.innerHTML='<div class="proPanel"><div class="proTwo"><div><div class="proEyebrow">Study workspace</div><div class="proTitle">Continue learning</div><p class="proMuted" id="proNextText">Choose your next lesson and keep your progress moving.</p><div class="proGrid4" style="margin-top:14px"><button class="proBtn primaryPro" id="proNext"><strong>Continue lesson</strong><span>Open the next unfinished topic.</span></button><button class="proBtn" onclick="goId(\'proPractice\')"><strong>Practice center</strong><span>Quick Check, assessment, mistakes, challenge.</span></button><button class="proBtn" onclick="goId(\'lab\')"><strong>Lab bench</strong><span>Run observations and interactive simulations.</span></button><button class="proBtn" onclick="goId(\'proCurriculum\')"><strong>Curriculum map</strong><span>See the complete Grade 6 learning path.</span></button></div></div><div class="proCard"><span class="proKicker">LOCAL PROGRESS</span><div style="font-size:1.8rem;font-weight:900;margin-top:7px" id="proMetric">0 / 18</div><p class="proMuted" style="margin:3px 0 10px;font-size:.8rem">Lessons completed on this device.</p><div class="proUnitBar"><i id="proMainBar"></i></div><div class="proUnitMeta"><span id="proPct">0%</span><span id="proReview">0 to review</span></div></div></div></div>';home.after(s);s.querySelector('#proNext').onclick=()=>{const d=done(),i=lessons.findIndex((_,n)=>!d.includes(n));if(i<0)goId('proPractice');else if(typeof openLesson==='function')openLesson(i)}} 
     const lessonsSec=document.getElementById('lessons');
     if(lessonsSec&&!document.getElementById('proCurriculum')){const s=document.createElement('section');s.id='proCurriculum';s.className='section';s.innerHTML='<div class="proPanel"><div class="sectionHead"><div><div class="proEyebrow">Curriculum map</div><div class="proTitle">Grade 6 science at a glance</div><p class="proMuted">Four study domains organize all 18 lessons.</p></div><span class="proKicker">18 LESSONS</span></div><div class="proGrid4" id="proUnits"></div><div class="proNotice" style="margin-top:12px">This is a study resource aligned to the Grade 6 topics represented on the site. It is not an official Rowan-Salisbury curriculum or district endorsement.</div></div>';lessonsSec.before(s);const units=[['Science & Engineering Skills','skills','Questions, models, data, and evidence.'],['Physical Science','physical','Matter, thermal energy, forces, and waves.'],['Life Science','life','Plants, ecosystems, and population interactions.'],['Earth & Space Science','earth','Earth systems, geologic processes, and space.']];s.querySelector('#proUnits').innerHTML=units.map(u=>{const total=lessons.filter(x=>x[2]===u[1]).length,d=done().filter(i=>lessons[i]?.[2]===u[1]).length,p=Math.round(d/total*100);return '<article class="proUnit"><h3>'+u[0]+'</h3><p>'+u[2]+'</p><div class="proUnitBar"><i data-u="'+u[1]+'" style="width:'+p+'%"></i></div><div class="proUnitMeta"><span>'+d+'/'+total+' complete</span><span>'+p+'%</span></div></article>'}).join('')}}
@@ -1003,7 +1005,7 @@ body.teacherUnlocked #assignmentWorkspace{display:block!important}
     Quiz:'assessment',
     Teacher:'teacher'
   };
-  const separatePages=new Set(['lessons','assessment','game']);
+  const separatePages=new Set(['lessons','assessment','game','teacher']);
   const labels=Object.keys(pageMap);
   const params=new URLSearchParams(location.search);
   const route=params.get('page');
@@ -1075,7 +1077,17 @@ body.teacherUnlocked #assignmentWorkspace{display:block!important}
 
   function applyRoute(){
     setupNav();
-    if(isLesson)return;
+    if(isLesson){
+      restoreHome();
+      buildRouteShell();
+      document.body.classList.add('routePage');
+      hideEverything();
+      const lv=document.getElementById('lessonView');
+      if(lv){lv.classList.remove('routeHidden');lv.style.display='block';}
+      const lessonIndex=Number(params.get('lesson'));
+      if(Number.isInteger(lessonIndex)&&lessonIndex>=0&&lessonIndex<lessons.length&&typeof openLesson==='function')openLesson(lessonIndex);
+      return;
+    }
     if(route==='teacher'){
       restoreHome();
       buildTeacherPage();
@@ -1087,7 +1099,7 @@ body.teacherUnlocked #assignmentWorkspace{display:block!important}
       return;
     }
     const config={
-      lessons:[['proCurriculum','lessons'],'Lessons','The complete Grade 6 science learning path.'],
+      lessons:[['lessons'],'Lessons','The complete Grade 6 science learning path.'],
       assessment:[['quiz'],'Assessment','A longer application-focused Grade 6 science assessment.'],
       game:[['weighSpaceSection'],'Weigh in Space','Complete all 18 lessons to unlock the interactive space experience.']
     }[route];
