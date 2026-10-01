@@ -979,25 +979,18 @@ body.teacherUnlocked #assignmentWorkspace{display:block!important}
 <script>
 (function(){
   const pageMap={
-    Dashboard:'dashboard',
     Lessons:'lessons',
-    Quiz:'quiz',
-    Lab:'lab',
-    Words:'words',
-    Practice:'proPractice',
-    Curriculum:'proCurriculum',
-    Progress:'dashboard',
-    School:'schoolAccess',
-    'To-Do':'studentTodo',
-    Teacher:'teacher'
+    Quiz:'assessment'
   };
+  const separatePages=new Set(['lessons','assessment','game']);
   const labels=Object.keys(pageMap);
-  const route=new URLSearchParams(location.search).get('page');
-  const isLesson=new URLSearchParams(location.search).has('lesson');
+  const params=new URLSearchParams(location.search);
+  const route=params.get('page');
+  const isLesson=params.has('lesson');
 
   function goPage(page){
-    const target=page==='lessons'?location.pathname+'?page=lessons':'?page='+encodeURIComponent(page);
-    location.href=target;
+    if(!separatePages.has(page))return;
+    location.href=location.pathname+'?page='+encodeURIComponent(page);
   }
 
   function hideEverything(){
@@ -1007,17 +1000,25 @@ body.teacherUnlocked #assignmentWorkspace{display:block!important}
     });
   }
 
+  function restoreHome(){
+    document.body.classList.remove('routePage');
+    const shell=document.getElementById('routeShell');
+    if(shell)shell.remove();
+    document.querySelectorAll('.routeHidden').forEach(el=>el.classList.remove('routeHidden'));
+    const top=document.getElementById('top');
+    if(top)window.scrollTo({top:0,behavior:'instant'});
+  }
+
   function buildRouteShell(){
     if(document.getElementById('routeShell'))return;
-    document.querySelectorAll('.navlinks button').forEach(b=>{if(b.textContent.trim()==='Home')b.remove()});
     const shell=document.createElement('div');
     shell.id='routeShell';
     shell.className='routeShell';
-    shell.innerHTML='<div class="routeFrame"><button class="routeBack" onclick="location.href=location.pathname">← Science Lab 6 home</button><div class="routeTitle" id="routeTitle">Science Lab 6</div><p class="routeSub" id="routeSub">Page</p></div>';
+    shell.innerHTML='<div class="routeFrame"><button class="routeBack" onclick="location.href=location.pathname">← Back to Science Lab 6</button><div class="routeTitle" id="routeTitle">Science Lab 6</div><p class="routeSub" id="routeSub">Page</p></div>';
     document.body.insertBefore(shell,document.body.firstChild);
   }
 
-  function showTarget(id,title,sub){
+  function showTarget(ids,title,sub){
     buildRouteShell();
     document.body.classList.add('routePage');
     hideEverything();
@@ -1026,49 +1027,48 @@ body.teacherUnlocked #assignmentWorkspace{display:block!important}
     if(!frame)return;
     document.getElementById('routeTitle').textContent=title;
     document.getElementById('routeSub').textContent=sub;
-    id.forEach(sectionId=>{
+    ids.forEach(sectionId=>{
       const target=document.getElementById(sectionId);
       if(target){target.classList.remove('routeHidden');frame.appendChild(target);}
     });
   }
 
   function setupNav(){
-    const buttons=[...document.querySelectorAll('.navlinks button')];
-    buttons.forEach(b=>{
+    document.querySelectorAll('.navlinks button').forEach(b=>{
       const label=b.textContent.trim();
-      if(!labels.includes(label)||b.dataset.routeBound)return;
+      if(b.dataset.routeBound)return;
       b.dataset.routeBound='1';
-      b.onclick=e=>{e.preventDefault();goPage(pageMap[label])};
+      if(label==='Lessons'||label==='Quiz'){
+        b.onclick=e=>{e.preventDefault();goPage(pageMap[label])};
+      }else{
+        b.onclick=e=>{
+          e.preventDefault();
+          restoreHome();
+          const oldGo=window.go;
+          if(typeof oldGo==='function')oldGo(label.toLowerCase());
+        };
+      }
     });
   }
 
   function applyRoute(){
-    if(isLesson)return;
     setupNav();
-    const key=route||'lessons';
-    const config={
-      dashboard:[['dashboard'],'Dashboard','Track study progress, streaks, badges, and study tools.'],
-      lessons:[['proCurriculum','lessons'],'Lessons','Open the Grade 6 science learning path.'],
-      quiz:[['proPractice','featureHub','quiz'],'Quiz','Practice questions and the Grade 6 assessment.'],
-      lab:[['lab','proSimulations'],'Lab','Hands-on activities and interactive science simulations.'],
-      words:[['words'],'Words','Science vocabulary and quick definitions.'],
-      proPractice:[['proPractice','featureHub','quiz'],'Practice Center','Quick checks, assessments, mistakes, and daily practice.'],
-      proCurriculum:[['proCurriculum','lessons'],'Curriculum Map','See the complete Grade 6 study sequence.'],
-      schoolAccess:[['schoolAccess'],'School Access','Launch information and school-resource details.'],
-      studentTodo:[['studentTodo'],'To-Do','Your class assignments and follow-up work.'],
-      teacher:[['assignmentWorkspace'],'Teacher Workspace','Teacher assignment and classwork tools.']
-    }[key]||null;
-    if(!config)return goPage('home');
-    const [ids,title,sub]=config;
-    if(!ids.some(id=>document.getElementById(id)))return setTimeout(applyRoute,250);
-    showTarget(ids,title,sub);
-    if(key==='teacher'){
-      setTimeout(()=>{
-        const gate=document.getElementById('teacherGate');
-        if(gate)gate.classList.add('open');
-        document.getElementById('teacherCode')?.focus();
-      },250);
+    if(isLesson)return;
+    if(!separatePages.has(route)){
+      restoreHome();
+      return;
     }
+    const config={
+      lessons:[['proCurriculum','lessons'],'Lessons','The complete Grade 6 science learning path.'],
+      assessment:[['quiz'],'Assessment','A longer application-focused Grade 6 science assessment.'],
+      game:[['weighSpaceSection'],'Weigh in Space','Complete all 18 lessons to unlock the interactive space experience.']
+    }[route];
+    if(!config)return restoreHome();
+    if(!config[0].some(id=>document.getElementById(id))){
+      setTimeout(applyRoute,250);
+      return;
+    }
+    showTarget(config[0],config[1],config[2]);
   }
 
   function wireDynamicButtons(){
@@ -1093,7 +1093,7 @@ body.teacherUnlocked #assignmentWorkspace{display:block!important}
     setupNav();
     const oldGo=window.go;
     window.go=function(id){
-      if(pageMap[id]){goPage(pageMap[id]);return;}
+      if(id==='lessons'){goPage('lessons');return;}\n      if(id==='quiz'){goPage('assessment');return;}\n      if(id==='game'){goPage('game');return;}
       if(typeof oldGo==='function')oldGo(id);
     };
     if(isLesson)return;
