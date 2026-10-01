@@ -524,6 +524,39 @@ let elapsed=0,timerId=null;function startTimer(){if(timerId)return;timerId=setIn
   if(document.readyState!=='loading')setTimeout(inject,850);
 })();
 </script>
+<style>
+#assignmentWorkspace{display:none!important}
+body.teacherUnlocked #assignmentWorkspace{display:block!important}
+.teacherGate{position:fixed;inset:0;z-index:12000;background:rgba(3,8,14,.86);backdrop-filter:blur(12px);display:none;align-items:center;justify-content:center;padding:18px}.teacherGate.open{display:flex}.teacherGateCard{width:min(430px,96vw);background:#101722;border:1px solid #304258;border-radius:13px;padding:24px;box-shadow:0 24px 80px rgba(0,0,0,.55)}.teacherGateCard h2{margin:6px 0 7px;font-size:1.45rem}.teacherGateCard p{color:#91a0b2;font-size:.82rem;line-height:1.55}.teacherGateCard input{width:100%;box-sizing:border-box;background:#0b131d;border:1px solid #34485f;color:#f5f7fa;border-radius:8px;padding:11px 12px;font:inherit;margin-top:10px}.teacherGateActions{display:flex;gap:8px;justify-content:flex-end;margin-top:12px}.teacherGateBtn{border:1px solid #34485f;background:#152131;color:#fff;border-radius:7px;padding:9px 12px;font-weight:900;cursor:pointer}.teacherGateBtn.primary{background:#4f9cff;color:#07111e;border-color:#4f9cff}.teacherGateMsg{min-height:20px;margin-top:8px;font-size:.76rem;font-weight:800;color:#fca5a5}
+</style>
+<script>
+(function(){
+  const HASH='0095714f01ace06194b73e314ff2a3294bd744674d53e6e9df4fec9b49d88721';
+  let authed=false;
+  async function hash(value){
+    if(window.crypto?.subtle){const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(value));return [...new Uint8Array(buf)].map(x=>x.toString(16).padStart(2,'0')).join('')}
+    return value;
+  }
+  function setup(){
+    if(document.getElementById('teacherGate'))return;
+    const modal=document.createElement('div');modal.className='teacherGate';modal.id='teacherGate';modal.innerHTML='<div class="teacherGateCard"><div class="proEyebrow">Teacher access</div><h2>Sign in to Teacher Workspace</h2><p>This area is hidden from the normal student view. Enter the teacher access code to open classwork and assignment tools.</p><input id="teacherCode" type="password" autocomplete="off" placeholder="Teacher access code" aria-label="Teacher access code"><div class="teacherGateMsg" id="teacherGateMsg"></div><div class="teacherGateActions"><button class="teacherGateBtn" id="teacherGateCancel">Cancel</button><button class="teacherGateBtn primary" id="teacherGateSubmit">Sign in</button></div></div></div>';
+    document.body.appendChild(modal);
+    const close=()=>{modal.classList.remove('open');document.getElementById('teacherCode').value='';document.getElementById('teacherGateMsg').textContent=''};
+    document.getElementById('teacherGateCancel').onclick=close;
+    document.getElementById('teacherGateSubmit').onclick=async()=>{const value=document.getElementById('teacherCode').value;const ok=(await hash(value))===HASH;if(!ok){document.getElementById('teacherGateMsg').textContent='Incorrect teacher access code.';return}authed=true;document.body.classList.add('teacherUnlocked');close();document.getElementById('assignmentWorkspace')?.scrollIntoView({behavior:'smooth',block:'start'})};
+    document.getElementById('teacherCode').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('teacherGateSubmit').click();if(e.key==='Escape')close()});
+  }
+  function bindTeacherButton(){
+    const buttons=[...document.querySelectorAll('.navlinks button')];
+    const teacher=buttons.find(b=>b.textContent.trim()==='Teacher');
+    if(!teacher)return false;
+    teacher.onclick=(e)=>{e.preventDefault();if(authed){document.getElementById('assignmentWorkspace')?.scrollIntoView({behavior:'smooth',block:'start'});return}setup();document.getElementById('teacherGate')?.classList.add('open');setTimeout(()=>document.getElementById('teacherCode')?.focus(),30)};
+    return true;
+  }
+  const start=()=>{document.body.classList.remove('teacherUnlocked');bindTeacherButton();setTimeout(bindTeacherButton,900);setTimeout(bindTeacherButton,1500)};
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
+})();
+</script>
 </body></html>
 <script>
 (function(){
