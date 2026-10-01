@@ -430,4 +430,285 @@ let elapsed=0,timerId=null;function startTimer(){if(timerId)return;timerId=setIn
   window.openLesson=function(i){oldOpen(i);setTimeout(()=>addChecks(i),0)};
 })();
 </script>
+<script>
+(function(){
+  const ANSWER_STORE='scienceLab6LessonAnswersV1';
+  const GATE_QS=[
+    [['What is the main goal of a science investigation?',['Build an explanation from evidence','Choose an answer before testing','Ignore observations','Change every variable at once'],0],['Which part of an investigation is evidence?',['A measurement or observation that supports a claim','A guess made before testing','A personal opinion','A random answer'],0]],
+    [['What is an atom?',['A tiny particle that makes up matter','A unit of temperature','A type of wave','A force'],0],['Which property compares mass with volume?',['Density','Frequency','Temperature','Wavelength'],0]],
+    [['What usually happens to particle motion when thermal energy is added?',['It generally increases','It always stops','The particles disappear','The substance loses mass'],0],['Which is a phase change?',['Melting','Measuring','Filtering','Weighing'],0]],
+    [['Which process transfers thermal energy through direct contact?',['Conduction','Convection','Radiation','Reflection'],0],['What does a complete electrical circuit provide?',['A closed path for current','A new element','More mass','A sound wave'],0]],
+    [['What does wave amplitude describe?',['The size of the disturbance','The number of planets','The type of atom','The distance to Earth'],0],['Which wave needs matter to travel?',['Mechanical wave','Electromagnetic wave','Light wave only','No wave'],0]],
+    [['What can happen when light hits a mirror?',['It can be reflected','It must disappear','It becomes sound','It loses all energy'],0],['Which type of wave is visible light?',['Electromagnetic','Mechanical','Seismic','Water'],0]],
+    [['What starts a sound wave?',['A vibration','A shadow','A chemical reaction only','A planet orbit'],0],['Why can sound not travel through a vacuum?',['It needs matter as a medium','It is too bright','It has no frequency','It is made of atoms'],0]],
+    [['What process uses light energy to make sugars in plants?',['Photosynthesis','Respiration','Transpiration','Erosion'],0],['What does transpiration describe?',['Water vapor leaving a plant','Sugar entering a root','Rock breaking apart','Energy entering a circuit'],0]],
+    [['What do vascular tissues help a plant do?',['Transport water and nutrients','Make the Sun rise','Create earthquakes','Reflect sound'],0],['What is an adaptation?',['A characteristic that helps an organism survive or reproduce','A type of rock','A measurement tool','A force'],0]],
+    [['Where does most energy in a typical ecosystem enter?',['The Sun','The soil','Decomposers','The Moon'],0],['What does a decomposer do?',['Breaks down dead material and wastes','Makes sunlight','Stops all energy transfer','Creates planets'],0]],
+    [['Which is an abiotic factor?',['Temperature','A fox','A tree','A bacterium'],0],['Why is population data useful?',['It can show patterns and help predict changes','It is always an opinion','It replaces observations','It only describes rocks'],0]],
+    [['What causes day and night?',['Earth rotating on its axis','The Moon making light','Earth stopping in space','The Sun orbiting Earth'],0],['Why do Moon phases change?',['We see different portions of its sunlit half','The Moon changes size','The Moon makes different amounts of light','Earth blocks it every night'],0]],
+    [['Which force strongly controls planetary orbits?',['Gravity','Friction','Sound','Buoyancy'],0],['Which comparison can help scientists compare planets?',['Size, gravity, atmosphere, surface, and distance from the Sun','Only color','Only number of moons','Only brightness'],0]],
+    [['Why are scale models useful in space science?',['They represent huge systems in a manageable way','They make distances exact','They remove the need for evidence','They make planets closer in real life'],0],['What can spacecraft provide?',['Measurements and observations','Only guesses','No scientific evidence','Only pictures of Earth'],0]],
+    [['What is Earth’s outermost major rocky layer?',['Crust','Mantle','Outer core','Inner core'],0],['How do scientists learn about Earth’s deep interior?',['By using indirect evidence such as seismic waves','By drilling to the center','By watching clouds','By measuring only temperature'],0]],
+    [['What can plate movement cause?',['Earthquakes, volcanoes, and mountains','Only weather','Only Moon phases','Only tides'],0],['What is an earthquake?',['A sudden release of energy that produces seismic waves','A type of plant','A weather pattern','A change in Moon phase'],0]],
+    [['What is weathering?',['Breaking rock or soil material down','Moving sediment','Dropping sediment','Making sunlight'],0],['What is deposition?',['Dropping or settling sediment','Breaking rock apart','Moving sediment only','Changing an element'],0]],
+    [['What is stewardship?',['Responsible care and management of resources','Using resources as fast as possible','Ignoring soil','Changing Earth’s orbit'],0],['Which practice can help protect soil?',['Using land in ways that reduce erosion and maintain soil quality','Removing all plant cover','Increasing deforestation','Ignoring soil data'],0]]
+  ];
+  const worlds=[
+    {name:'Mercury',gravity:.38,type:'Rocky planet',scene:'mercury'},
+    {name:'Venus',gravity:.91,type:'Rocky planet',scene:'venus'},
+    {name:'Earth',gravity:1,type:'Rocky planet',scene:'earth'},
+    {name:'Mars',gravity:.38,type:'Rocky planet',scene:'mars'},
+    {name:'Jupiter',gravity:2.53,type:'Gas giant • atmospheric simulation',scene:'jupiter'},
+    {name:'Saturn',gravity:1.07,type:'Gas giant • atmospheric simulation',scene:'saturn'},
+    {name:'Uranus',gravity:.89,type:'Ice giant • atmospheric simulation',scene:'uranus'},
+    {name:'Neptune',gravity:1.14,type:'Ice giant • atmospheric simulation',scene:'neptune'},
+    {name:'Pluto',gravity:.06,type:'Dwarf planet',scene:'pluto'},
+    {name:'Moon',gravity:.165,type:'Natural satellite',scene:'moon'}
+  ];
+  const sceneStyles={
+    mercury:'linear-gradient(#15171b 0 36%,#4b4a46 37% 39%,#2b2926 40% 100%),radial-gradient(circle at 25% 70%,#77746c 0 7%,transparent 8%),radial-gradient(circle at 74% 76%,#66635d 0 9%,transparent 10%),radial-gradient(circle at 52% 58%,#8a8780 0 5%,transparent 6%)',
+    venus:'linear-gradient(#322b20 0 38%,#b08d59 39% 41%,#775d38 42% 100%),repeating-linear-gradient(155deg,rgba(244,222,166,.16) 0 12px,transparent 12px 25px)',
+    earth:'linear-gradient(#081426 0 42%,#294b57 43% 46%,#3f6438 47% 100%),radial-gradient(circle at 22% 68%,#739c5c 0 8%,transparent 9%),radial-gradient(circle at 68% 76%,#6a8b55 0 10%,transparent 11%),radial-gradient(circle at 83% 63%,#9dbd76 0 6%,transparent 7%)',
+    mars:'linear-gradient(#1c1110 0 40%,#934b32 41% 45%,#5a2a1f 46% 100%),radial-gradient(circle at 26% 70%,#c06d4b 0 8%,transparent 9%),radial-gradient(circle at 70% 78%,#7f3f2d 0 11%,transparent 12%),radial-gradient(circle at 50% 61%,#b75e3f 0 5%,transparent 6%)',
+    jupiter:'linear-gradient(#251d16 0 34%,#b8855a 35% 37%,#e2c39e 38% 45%,#8a604c 46% 53%,#d6ab7f 54% 61%,#704b3c 62% 100%)',
+    saturn:'linear-gradient(#151719 0 35%,#bd9f73 36% 39%,#e3cfac 40% 48%,#92765a 49% 55%,#d5bb8d 56% 65%,#776046 66% 100%)',
+    uranus:'linear-gradient(#10232c 0 36%,#69aeb2 37% 43%,#4f8f95 44% 52%,#315d64 53% 100%)',
+    neptune:'linear-gradient(#071427 0 34%,#214f90 35% 42%,#2969bc 43% 52%,#163f79 53% 100%)',
+    pluto:'linear-gradient(#171719 0 36%,#8f8070 37% 42%,#5a5149 43% 100%),radial-gradient(circle at 27% 70%,#d1c0a7 0 10%,transparent 11%),radial-gradient(circle at 70% 62%,#a69a8a 0 8%,transparent 9%)',
+    moon:'linear-gradient(#0e1118 0 39%,#65635f 40% 45%,#4c4945 46% 100%),radial-gradient(circle at 24% 71%,#79756e 0 9%,transparent 10%),radial-gradient(circle at 69% 66%,#383632 0 11%,transparent 12%),radial-gradient(circle at 52% 80%,#77736c 0 7%,transparent 8%)'
+  };
+  let answers={};
+  try{const s=JSON.parse(localStorage.getItem(ANSWER_STORE)||'{}');if(s&&typeof s==='object')answers=s}catch(e){answers={}};
+  const saveAnswers=()=>{try{localStorage.setItem(ANSWER_STORE,JSON.stringify(answers))}catch(e){}};
+  const completedList=()=>typeof completed!=='undefined'&&Array.isArray(completed)?completed:[];
+  const allComplete=()=>completedList().length===18&&GATE_QS.every((_,i)=>answers[i]&&Object.prototype.hasOwnProperty.call(answers[i],0)&&Object.prototype.hasOwnProperty.call(answers[i],1));
+  const qAnswered=(i,q)=>!!(answers[i]&&Object.prototype.hasOwnProperty.call(answers[i],q));
+  function refreshGate(i){
+    const ready=qAnswered(i,0)&&qAnswered(i,1);
+    document.querySelectorAll('[data-complete-lesson="'+i+'"]').forEach(b=>{b.disabled=!ready;b.textContent=ready?'Mark as complete':'Answer both questions to unlock'});
+  }
+  function answerQuestion(i,q,a,correct,btn){
+    answers[i]=answers[i]||{};answers[i][q]=a;saveAnswers();
+    const box=btn.closest('.gateQuestion');box?.querySelectorAll('button').forEach(b=>b.classList.remove('selected'));btn.classList.add('selected');
+    box?.querySelectorAll('button[data-answer="'+correct+'"]').forEach(b=>b.classList.add('correctAnswer'));
+    const result=box?.querySelector('.gateResult');if(result){result.textContent=a===correct?'Correct.':'Not quite — review the lesson and try again.';result.style.color=a===correct?'#86efac':'#fca5a5'}
+    refreshGate(i);
+  }
+  function renderGateQuestions(i){
+    const q=GATE_QS[i];const ready=qAnswered(i,0)&&qAnswered(i,1);
+    return '<div class="lessonGate"><div class="gateHeading"><span>Completion check</span><b id="gateStatus'+i+'">'+(ready?'Both answered':'Answer both questions')+'</b></div><p class="small">Answer both lesson questions before you can mark this lesson complete.</p>'+q.map((item,qi)=>'<div class="gateQuestion"><h3>Question '+(qi+1)+'</h3><p>'+item[0]+'</p>'+item[1].map((a,ai)=>'<button data-answer="'+ai+'" class="'+(qAnswered(i,qi)&&answers[i][qi]===ai?'selected':'')+'" onclick="window.answerLessonQuestion('+i+','+qi+','+ai+','+item[2]+',this)">'+a+'</button>').join('')+'<div class="gateResult">'+(qAnswered(i,qi)?(answers[i][qi]===item[2]?'Correct.':'Not quite — review the lesson and try again.'):'')+'</div></div>').join('')+'<button class="lessonBtn gateComplete" data-complete-lesson="'+i+'" '+(!ready?'disabled':'')+' onclick="window.markStandalone('+i+')">'+(ready?'Mark as complete':'Answer both questions to unlock')+'</button></div>';
+  }
+  window.answerLessonQuestion=answerQuestion;
+  const oldComplete=window.complete;
+  window.complete=function(i){
+    if(!qAnswered(i,0)||!qAnswered(i,1)){alert('Answer both lesson questions before marking this lesson complete.');return false}
+    if(completedList().includes(i))return false;
+    const out=oldComplete?oldComplete(i):false;setTimeout(unlockSpaceGame,0);return out;
+  };
+  window.markStandalone=function(i){
+    if(!qAnswered(i,0)||!qAnswered(i,1)){alert('Answer both lesson questions before marking this lesson complete.');return false}
+    const done=completedList().slice();if(!done.includes(i))done.push(i);
+    try{localStorage.setItem('science6done',JSON.stringify(done))}catch(e){}
+    renderEnhancedStandalone(i);setTimeout(unlockSpaceGame,0);return true;
+  };
+  window.answerLessonQuestion=answerQuestion;
+  function renderEnhancedStandalone(i){
+    const x=lessons[i],n=lessonNotes[i];if(!x||!n)return;
+    document.title='Science Lab 6 — '+x[1];
+    document.body.innerHTML='<style>body{margin:0;background:#0a1019;color:#f5f7fa;font-family:Inter,system-ui,sans-serif}.lessonPage{min-height:100vh}.lessonNav{padding:16px 22px;border-bottom:1px solid #2a3950;background:#0c141f;position:sticky;top:0;z-index:5}.lessonNavInner{max-width:960px;margin:auto;display:flex;justify-content:space-between;align-items:center;gap:12px}.lessonBrand{font-weight:900;letter-spacing:.08em}.lessonBrand span{color:#4f9cff}.lessonBack{border:1px solid #34485f;background:#152131;color:#fff;border-radius:7px;padding:9px 13px;font-weight:800;cursor:pointer}.lessonMain{max-width:960px;margin:auto;padding:42px 22px 80px}.lessonMeta{color:#7db8ff;text-transform:uppercase;letter-spacing:.1em;font-size:.75rem;font-weight:900}.lessonTitle{font-size:clamp(2.3rem,6vw,4.3rem);line-height:1;letter-spacing:-.045em;margin:10px 0 8px}.lessonCat{color:#9eacbd}.lessonProgress{height:5px;background:#182536;border-radius:99px;overflow:hidden;margin-top:20px}.lessonProgress i{display:block;height:100%;background:#4f9cff}.lessonCard{margin-top:28px;background:#111b27;border:1px solid #2a3950;border-radius:12px;padding:30px}.lessonCard h2{font-size:1.1rem;margin:0 0 9px}.lessonCard p{color:#d5dde7;line-height:1.85;font-size:1.03rem;margin:0 0 25px}.lessonFacts{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:-6px 0 27px}.lessonFact{padding:13px;background:#152131;border:1px solid #2a3950;border-radius:8px}.lessonFact b{display:block;color:#7db8ff;margin-bottom:4px}.lessonFact span{color:#aeb9c7;font-size:.9rem;line-height:1.5}.lessonNote{width:100%;min-height:150px;background:#0b131d;color:#f5f7fa;border:1px solid #34485f;border-radius:8px;padding:13px;font:inherit;box-sizing:border-box;resize:vertical}.lessonTools{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.lessonBtn,.gateComplete{border:1px solid #34485f;background:#152131;color:#fff;border-radius:7px;padding:10px 13px;font-weight:800;cursor:pointer}.lessonBtn:disabled,.gateComplete:disabled{opacity:.45;cursor:not-allowed}.lessonGate{margin-top:18px;background:#111b27;border:1px solid #2a3950;border-radius:12px;padding:24px}.gateHeading{display:flex;justify-content:space-between;gap:12px;align-items:center}.gateHeading span{font-size:1.15rem;font-weight:900}.gateHeading b{color:#7db8ff;font-size:.82rem}.gateQuestion{margin-top:18px;padding:17px;background:#152131;border:1px solid #2a3950;border-radius:8px}.gateQuestion h3{margin:0 0 8px}.gateQuestion p{margin:0 0 10px;color:#d5dde7;line-height:1.65}.gateQuestion button{display:block;width:100%;text-align:left;margin-top:7px;padding:11px 12px;border:1px solid #34485f;background:#0e1722;color:#fff;border-radius:7px;font-weight:700;cursor:pointer}.gateQuestion button.selected{border-color:#4f9cff;background:#172b44}.gateQuestion button.correctAnswer{outline:2px solid #2fbd8c}.gateResult{min-height:20px;margin-top:8px;font-size:.84rem;font-weight:800}.gateComplete{margin-top:18px;background:#4f9cff;color:#07111e;border-color:#4f9cff}.gateComplete:disabled{background:#152131;color:#7f8da0;border-color:#34485f}.lessonPager{display:flex;gap:10px;margin-top:16px}.lessonPager .lessonBtn{flex:1}@media(max-width:600px){.lessonMain{padding:28px 14px 60px}.lessonCard,.lessonGate{padding:20px}.lessonFacts{grid-template-columns:1fr}.gateHeading{align-items:flex-start;flex-direction:column}.lessonPager{flex-direction:column}}</style><div class="lessonPage"><div class="lessonNav"><div class="lessonNavInner"><div class="lessonBrand">SCIENCE <span>LAB 6</span></div><button class="lessonBack" onclick="location.href=location.pathname">Back to lessons</button></div></div><main class="lessonMain"><div class="lessonMeta">Lesson '+(i+1)+' of '+lessons.length+'</div><h1 class="lessonTitle">'+esc(x[1])+'</h1><div class="lessonCat">'+esc(x[2].replace('earth','Earth & Space').replace('physical','Physical').replace('life','Life').replace('skills','Science Skills'))+'</div><div class="lessonProgress"><i style="width:'+((i+1)/lessons.length*100)+'%"></i></div><article class="lessonCard"><h2>What you need to know</h2><p>'+esc(n[1]||x[3])+'</p><h2>Key idea</h2><p>'+esc(n[2]||'')+'</p><h2>Real-world example</h2><p>'+esc(n[3]||x[3])+'</p><h2>Key vocabulary</h2><div class="lessonFacts">'+(Array.isArray(n[4])?n[4].map(v=>{const p=String(v).split(': ');return '<div class="lessonFact"><b>'+esc(p[0])+'</b><span>'+esc(p.slice(1).join(': '))+'</span></div>'}).join(''):'')+'</div><h2>My study notes</h2><textarea class="lessonNote" id="standaloneNote" placeholder="Write what you need to remember from this lesson..."></textarea><div class="lessonTools"><button class="lessonBtn" onclick="window.print()">Print lesson</button></div></article>'+renderGateQuestions(i)+'<div class="lessonPager"><button class="lessonBtn" onclick="location.href='?lesson='+((i-1+lessons.length)%lessons.length)">Previous lesson</button><button class="lessonBtn" onclick="location.href='?lesson='+((i+1)%lessons.length)">Next lesson</button></div></main></div>';
+  }
+  function ensureGameStyles(){
+    if(document.getElementById('weighSpaceStyles'))return;
+    document.head.insertAdjacentHTML('beforeend','<style id="weighSpaceStyles">.spaceGamePanel{background:#101722;border:1px solid #283447;border-radius:12px;padding:20px}.weightControls{display:grid;grid-template-columns:280px 1fr;gap:18px;align-items:end;margin-bottom:18px}.weightControls label{font-weight:800}.weightControls input{display:block;width:100%;margin-top:7px;padding:11px 12px;border:1px solid #34485f;border-radius:7px;background:#0b131d;color:#f5f7fa;font:inherit;box-sizing:border-box}.worldGrid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}.worldCard{min-height:155px;text-align:left;border:1px solid #2b3b50;border-radius:9px;background:#141e2b;color:#f5f7fa;padding:15px;cursor:pointer}.worldCard:hover{border-color:#4f9cff;transform:translateY(-2px)}.worldCard strong{display:block;font-size:1.15rem;margin:4px 0 9px}.worldType{display:block;color:#8fb5dd;font-size:.72rem;text-transform:uppercase;letter-spacing:.04em}.worldWeight{display:block;color:#fff;font-size:1.35rem;font-weight:900}.worldCard small{display:block;color:#8fa0b5;margin-top:5px}.spaceModal{position:fixed;inset:0;z-index:11000;background:rgba(2,7,13,.92);display:none;align-items:center;justify-content:center;padding:18px}.spaceModal.open{display:flex}.spaceModalCard{width:min(1180px,97vw);max-height:94vh;overflow:auto;background:#0e1621;border:1px solid #2f4158;border-radius:12px;padding:20px;box-shadow:0 20px 80px rgba(0,0,0,.55)}.spaceModalTop{display:flex;justify-content:space-between;gap:16px;align-items:flex-start}.spaceModalTop h2{margin:5px 0 4px;font-size:2rem}.spaceView{height:min(62vh,620px);min-height:360px;margin-top:16px;position:relative;overflow:hidden;border:1px solid #314158;border-radius:10px;background:#05090f;touch-action:none;cursor:grab}.spaceView:active{cursor:grabbing}.spaceStars{position:absolute;inset:0;background-image:radial-gradient(circle at 12% 18%,#fff 0 1px,transparent 2px),radial-gradient(circle at 72% 12%,#fff 0 1px,transparent 2px),radial-gradient(circle at 44% 23%,#fff 0 1px,transparent 2px),radial-gradient(circle at 87% 31%,#fff 0 1px,transparent 2px),radial-gradient(circle at 21% 36%,#fff 0 1px,transparent 2px),radial-gradient(circle at 56% 8%,#fff 0 1px,transparent 2px),radial-gradient(circle at 64% 34%,#fff 0 1px,transparent 2px);opacity:.55}.spaceHorizon{position:absolute;inset:-12% -30%;width:160%;height:125%;background-repeat:repeat-x;background-size:cover;background-position:50% 50%;transition:background-position .05s linear}.spaceHorizon:before{content:"";position:absolute;left:0;right:0;top:43%;height:2px;background:rgba(255,255,255,.08)}.lookHint{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);padding:8px 12px;border:1px solid rgba(255,255,255,.18);background:rgba(0,0,0,.58);border-radius:999px;font-size:.78rem;white-space:nowrap;color:#d6deea}.weightReadout{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}.weightReadout div{padding:14px;border:1px solid #29384b;border-radius:8px;background:#141e2b}.weightReadout span{display:block;color:#90a0b2;font-size:.76rem}.weightReadout b{display:block;font-size:1.3rem;margin-top:4px}.lockedNote{padding:14px 16px;border-left:3px solid #4f9cff;background:#141e2b;color:#b9c5d4;border-radius:7px}@media(max-width:900px){.worldGrid{grid-template-columns:repeat(3,1fr)}.weightControls{grid-template-columns:1fr}}@media(max-width:600px){.worldGrid{grid-template-columns:repeat(2,1fr)}.weightReadout{grid-template-columns:1fr}.spaceView{min-height:320px}.spaceModal{padding:8px}.spaceModalCard{padding:14px}}</style>');
+  }
+  function addGame(){
+    if(document.getElementById('weighSpaceSection'))return;
+    ensureGameStyles();
+    const anchor=document.querySelector('.spaceGallery')?.parentElement;if(!anchor)return;
+    const sec=document.createElement('section');sec.className='section';sec.id='weighSpaceSection';
+    sec.innerHTML='<div class="sectionHead"><div><h2>Weigh in Space</h2><p>Enter a weight, choose a world, and compare how gravity changes the reading. Click a world for a first-person look-around simulation.</p></div></div><div class="spaceGamePanel"><div class="weightControls"><label>Your Earth weight (lb)<input id="spaceWeight" type="number" min="1" max="1000" step="0.1" value="120"></label><div class="small">Weight here = Earth weight × surface gravity. Gas and ice giants use an atmospheric simulation because they do not have a solid surface to stand on.</div></div><div class="worldGrid" id="worldGrid"></div></div>';
+    anchor.after(sec);
+    document.body.insertAdjacentHTML('beforeend','<div class="spaceModal" id="spaceGameModal" aria-hidden="true"><div class="spaceModalCard"><div class="spaceModalTop"><div><div class="eyebrow">Weigh in Space</div><h2 id="spaceWorldTitle">World</h2><p id="spaceWorldMeta" class="small">Look around • No movement</p></div><button class="secondary" onclick="closeSpaceGame()">Close</button></div><div class="spaceView" id="spaceView"><div class="spaceStars"></div><div class="spaceHorizon" id="spaceHorizon"></div><div class="lookHint">Drag to look around • You cannot move</div></div><div class="weightReadout"><div><span>Your Earth weight</span><b id="earthWeightReadout">120 lb</b></div><div><span>Weight here</span><b id="worldWeightReadout">—</b></div><div><span>Gravity</span><b id="gravityReadout">—</b></div></div></div></div>');
+    document.getElementById('spaceWeight')?.addEventListener('input',renderWorlds);renderWorlds();
+  }
+  function renderWorlds(){
+    const input=document.getElementById('spaceWeight'),earth=Math.max(1,Number(input?.value)||120),grid=document.getElementById('worldGrid');if(!grid)return;
+    grid.innerHTML=worlds.map((w,i)=>'<button class="worldCard" onclick="openSpaceGame('+i+')"><span class="worldType">'+w.type+'</span><strong>'+w.name+'</strong><span class="worldWeight">'+(earth*w.gravity).toFixed(1)+' lb</span><small>'+w.gravity.toFixed(2)+'× Earth gravity</small></button>').join('');
+  }
+  function wireLook(){
+    const scene=document.getElementById('spaceView');if(!scene||scene.dataset.wired)return;scene.dataset.wired='1';
+    let drag=false,sx=0,sy=0,px=50,py=50;
+    const move=(x,y)=>{px=Math.max(0,Math.min(100,px-(x-sx)/7));py=Math.max(20,Math.min(80,py-(y-sy)/7));sx=x;sy=y;const h=document.getElementById('spaceHorizon');if(h)h.style.backgroundPosition=px+'% '+py+'%'};
+    scene.addEventListener('pointerdown',e=>{drag=true;sx=e.clientX;sy=e.clientY;scene.setPointerCapture?.(e.pointerId)});
+    scene.addEventListener('pointermove',e=>{if(drag)move(e.clientX,e.clientY)});scene.addEventListener('pointerup',()=>drag=false);scene.addEventListener('pointercancel',()=>drag=false);
+  }
+  window.openSpaceGame=function(i){
+    if(!allComplete()){alert('Complete all 18 lessons and answer all 36 lesson questions to unlock Weigh in Space.');return}
+    addGame();wireLook();
+    const earth=Math.max(1,Number(document.getElementById('spaceWeight')?.value)||120),w=worlds[i]||worlds[2],modal=document.getElementById('spaceGameModal'),h=document.getElementById('spaceHorizon');
+    document.getElementById('spaceWorldTitle').textContent=w.name;document.getElementById('spaceWorldMeta').textContent=w.type+' • Look around only • No movement';document.getElementById('earthWeightReadout').textContent=earth.toFixed(1)+' lb';document.getElementById('worldWeightReadout').textContent=(earth*w.gravity).toFixed(1)+' lb';document.getElementById('gravityReadout').textContent=w.gravity.toFixed(2)+'× Earth';h.style.backgroundImage=sceneStyles[w.scene];h.style.backgroundPosition='50% 50%';modal.classList.add('open');modal.setAttribute('aria-hidden','false');
+  };
+  window.closeSpaceGame=function(){const m=document.getElementById('spaceGameModal');if(m){m.classList.remove('open');m.setAttribute('aria-hidden','true')}};
+  window.togglePlanet=function(i){
+    if(allComplete()){openSpaceGame(i);return}
+    const e=document.getElementById('planetNote'+i);if(e)e.style.display=e.style.display==='none'?'block':'none';
+  };
+  function syncLessonCards(){
+    document.querySelectorAll('#lessonGrid .lesson').forEach(card=>{
+      const m=(card.querySelector('h3')?.textContent||'').match(/^(\d+)\./);if(!m)return;const i=Number(m[1])-1,btn=card.querySelector('.open');if(!btn)return;
+      const done=completedList().includes(i),ready=qAnswered(i,0)&&qAnswered(i,1);btn.disabled=done||!ready;btn.textContent=done?'✓ Done':ready?'Mark complete':'Answer questions first';
+    });
+  }
+  if(typeof window.renderLessons==='function'){const oldRender=window.renderLessons;window.renderLessons=function(filter){const r=oldRender(filter);setTimeout(syncLessonCards,0);return r};setTimeout(syncLessonCards,0)}
+  const pv=new URLSearchParams(location.search).get('lesson');if(pv!==null){const i=Number(pv);if(Number.isInteger(i)&&lessons[i])setTimeout(()=>renderEnhancedStandalone(i),0)}
+  if(allComplete())setTimeout(()=>{addGame();wireLook()},80);
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSpaceGame()});
+})();
+</script>
 </body></html>
+<script>
+(function(){
+  const ANSWER_STORE='scienceLab6LessonAnswersV2';
+  let lessonAnswers={};
+  try{const saved=JSON.parse(localStorage.getItem(ANSWER_STORE)||'{}');if(saved&&typeof saved==='object')lessonAnswers=saved}catch(e){lessonAnswers={}};
+  const saveAnswers=()=>{try{localStorage.setItem(ANSWER_STORE,JSON.stringify(lessonAnswers))}catch(e){}};
+  const doneList=()=>typeof completed!=='undefined'&&Array.isArray(completed)?completed:[];
+  const answered=(i,q)=>!!(lessonAnswers[i]&&Object.prototype.hasOwnProperty.call(lessonAnswers[i],q));
+  const ready=(i)=>answered(i,0)&&answered(i,1);
+  const fullyUnlocked=()=>doneList().length===18&&Array.from({length:18},(_,i)=>ready(i)).every(Boolean);
+  function bindLessonQuestions(i){
+    const root=document.getElementById('lessonContent');if(!root)return;
+    root.querySelectorAll('.pollBox button[data-q]').forEach(btn=>{
+      if(btn.dataset.gateBound)return;
+      btn.dataset.gateBound='1';
+      btn.addEventListener('click',()=>{
+        const q=Number(btn.dataset.q),a=Number(btn.dataset.a);
+        lessonAnswers[i]=lessonAnswers[i]||{};
+        lessonAnswers[i][q]=a;
+        saveAnswers();
+        refreshLessonGate(i);
+        syncLessonCards();
+      });
+    });
+    refreshLessonGate(i);
+  }
+  function refreshLessonGate(i){
+    const ok=ready(i),done=doneList().includes(i);
+    const buttons=[...document.querySelectorAll('#lessonContent button')].filter(b=>(b.getAttribute('onclick')||'').includes('markCurrentLesson('+i+')'));
+    buttons.forEach(b=>{
+      b.disabled=!ok||done;
+      b.textContent=done?'✓ Marked complete':ok?'Mark as complete':'Answer both questions first';
+      b.style.opacity=b.disabled?'0.55':'1';
+      b.style.cursor=b.disabled?'not-allowed':'pointer';
+    });
+    const content=document.getElementById('lessonContent');
+    if(content){
+      let note=content.querySelector('.completionRequirement');
+      if(!note){note=document.createElement('p');note.className='completionRequirement';note.style.cssText='margin:8px 0 0;color:#8fb5dd;font-size:.84rem;font-weight:800';content.appendChild(note)}
+      note.textContent=done?'Lesson completed.':ok?'You answered both lesson questions. You can mark this lesson complete.':'Answer both lesson questions above to unlock the completion button.';
+    }
+  }
+  function syncLessonCards(){
+    document.querySelectorAll('#lessonGrid .lesson').forEach(card=>{
+      const m=(card.querySelector('h3')?.textContent||'').match(/^(\d+)\./);if(!m)return;
+      const i=Number(m[1])-1,btn=card.querySelector('.open');if(!btn)return;
+      const done=doneList().includes(i),ok=ready(i);
+      btn.disabled=done||!ok;
+      btn.textContent=done?'✓ Done':ok?'Mark complete':'Answer questions first';
+      btn.style.opacity=btn.disabled?'0.55':'1';
+      btn.style.cursor=btn.disabled?'not-allowed':'pointer';
+    });
+  }
+  const oldOpenLesson=window.openLesson;
+  window.openLesson=function(i){
+    if(typeof oldOpenLesson==='function')oldOpenLesson(i);
+    setTimeout(()=>bindLessonQuestions(i),80);
+    setTimeout(()=>bindLessonQuestions(i),400);
+  };
+  const oldComplete=window.complete;
+  window.complete=function(i){
+    if(!ready(i)){alert('Answer both lesson questions before marking this lesson complete.');refreshLessonGate(i);return false}
+    if(doneList().includes(i))return false;
+    const result=typeof oldComplete==='function'?oldComplete(i):false;
+    setTimeout(()=>{syncLessonCards();unlockSpaceGame()},50);
+    return result;
+  };
+  const originalTogglePlanet=window.togglePlanet;
+  window.togglePlanet=function(i){
+    if(fullyUnlocked()){window.openSpaceGame(i);return}
+    if(typeof originalTogglePlanet==='function')originalTogglePlanet(i);
+  };
+  const worlds=[
+    {name:'Mercury',gravity:.38,type:'Rocky planet',scene:'mercury'},
+    {name:'Venus',gravity:.91,type:'Rocky planet',scene:'venus'},
+    {name:'Earth',gravity:1,type:'Rocky planet',scene:'earth'},
+    {name:'Mars',gravity:.38,type:'Rocky planet',scene:'mars'},
+    {name:'Jupiter',gravity:2.53,type:'Gas giant • atmospheric simulation',scene:'jupiter'},
+    {name:'Saturn',gravity:1.07,type:'Gas giant • atmospheric simulation',scene:'saturn'},
+    {name:'Uranus',gravity:.89,type:'Ice giant • atmospheric simulation',scene:'uranus'},
+    {name:'Neptune',gravity:1.14,type:'Ice giant • atmospheric simulation',scene:'neptune'},
+    {name:'Pluto',gravity:.06,type:'Dwarf planet',scene:'pluto'},
+    {name:'Moon',gravity:.165,type:'Natural satellite',scene:'moon'}
+  ];
+  const sceneStyles={
+    mercury:'linear-gradient(#171a20 0 36%,#57534d 37% 40%,#2f2d2a 41% 100%),radial-gradient(circle at 24% 70%,#8a8479 0 7%,transparent 8%),radial-gradient(circle at 76% 73%,#716c64 0 9%,transparent 10%),radial-gradient(circle at 54% 58%,#989188 0 5%,transparent 6%)',
+    venus:'linear-gradient(#30261b 0 38%,#b49764 39% 43%,#775f3d 44% 100%),repeating-linear-gradient(155deg,rgba(242,215,157,.15) 0 12px,transparent 12px 26px)',
+    earth:'linear-gradient(#071526 0 41%,#31555f 42% 46%,#496f3f 47% 100%),radial-gradient(circle at 22% 70%,#82a968 0 8%,transparent 9%),radial-gradient(circle at 68% 76%,#6f9657 0 10%,transparent 11%),radial-gradient(circle at 84% 63%,#aac77d 0 6%,transparent 7%)',
+    mars:'linear-gradient(#1c1110 0 40%,#984b32 41% 45%,#5b2c21 46% 100%),radial-gradient(circle at 25% 70%,#c16c49 0 8%,transparent 9%),radial-gradient(circle at 70% 78%,#7f3f2e 0 11%,transparent 12%),radial-gradient(circle at 50% 61%,#b85d40 0 5%,transparent 6%)',
+    jupiter:'linear-gradient(#261e17 0 34%,#bb8a61 35% 38%,#e7c9a5 39% 45%,#8b604d 46% 53%,#d8ad83 54% 61%,#714b3b 62% 100%)',
+    saturn:'linear-gradient(#15171a 0 35%,#c5a476 36% 40%,#e6d1aa 41% 48%,#96795b 49% 55%,#d8be91 56% 65%,#7c6348 66% 100%)',
+    uranus:'linear-gradient(#0d202a 0 36%,#73bcc0 37% 43%,#55979d 44% 52%,#315e65 53% 100%)',
+    neptune:'linear-gradient(#071326 0 34%,#275b9f 35% 42%,#2d73c7 43% 52%,#174781 53% 100%)',
+    pluto:'linear-gradient(#17181b 0 36%,#958476 37% 42%,#5e554c 43% 100%),radial-gradient(circle at 27% 70%,#d2c1a5 0 10%,transparent 11%),radial-gradient(circle at 70% 62%,#aa9f90 0 8%,transparent 9%)',
+    moon:'linear-gradient(#0e1118 0 39%,#6d6963 40% 45%,#4c4843 46% 100%),radial-gradient(circle at 24% 71%,#817b73 0 9%,transparent 10%),radial-gradient(circle at 69% 66%,#393733 0 11%,transparent 12%),radial-gradient(circle at 52% 80%,#7d776f 0 7%,transparent 8%)'
+  };
+  function addGameStyles(){
+    if(document.getElementById('weighSpaceStyles'))return;
+    const style=document.createElement('style');style.id='weighSpaceStyles';
+    style.textContent='.spaceGamePanel{background:#101722;border:1px solid #283447;border-radius:12px;padding:20px}.weightControls{display:grid;grid-template-columns:280px 1fr;gap:18px;align-items:end;margin-bottom:18px}.weightControls label{font-weight:800}.weightControls input{display:block;width:100%;margin-top:7px;padding:11px 12px;border:1px solid #34485f;border-radius:7px;background:#0b131d;color:#f5f7fa;font:inherit;box-sizing:border-box}.worldGrid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}.worldCard{min-height:155px;text-align:left;border:1px solid #2b3b50;border-radius:9px;background:#141e2b;color:#f5f7fa;padding:15px;cursor:pointer}.worldCard:hover{border-color:#4f9cff;transform:translateY(-2px)}.worldCard strong{display:block;font-size:1.15rem;margin:4px 0 9px}.worldType{display:block;color:#8fb5dd;font-size:.72rem;text-transform:uppercase;letter-spacing:.04em}.worldWeight{display:block;color:#fff;font-size:1.35rem;font-weight:900}.worldCard small{display:block;color:#8fa0b5;margin-top:5px}.spaceModal{position:fixed;inset:0;z-index:11000;background:rgba(2,7,13,.92);display:none;align-items:center;justify-content:center;padding:18px}.spaceModal.open{display:flex}.spaceModalCard{width:min(1180px,97vw);max-height:94vh;overflow:auto;background:#0e1621;border:1px solid #2f4158;border-radius:12px;padding:20px;box-shadow:0 20px 80px rgba(0,0,0,.55)}.spaceModalTop{display:flex;justify-content:space-between;gap:16px;align-items:flex-start}.spaceModalTop h2{margin:5px 0 4px;font-size:2rem}.spaceView{height:min(62vh,620px);min-height:360px;margin-top:16px;position:relative;overflow:hidden;border:1px solid #314158;border-radius:10px;background:#05090f;touch-action:none;cursor:grab}.spaceView:active{cursor:grabbing}.spaceStars{position:absolute;inset:0;background-image:radial-gradient(circle at 12% 18%,#fff 0 1px,transparent 2px),radial-gradient(circle at 72% 12%,#fff 0 1px,transparent 2px),radial-gradient(circle at 44% 23%,#fff 0 1px,transparent 2px),radial-gradient(circle at 87% 31%,#fff 0 1px,transparent 2px),radial-gradient(circle at 21% 36%,#fff 0 1px,transparent 2px),radial-gradient(circle at 56% 8%,#fff 0 1px,transparent 2px),radial-gradient(circle at 64% 34%,#fff 0 1px,transparent 2px);opacity:.55}.spaceHorizon{position:absolute;inset:-12% -30%;width:160%;height:125%;background-repeat:repeat-x;background-size:cover;background-position:50% 50%;transition:background-position .05s linear}.lookHint{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);padding:8px 12px;border:1px solid rgba(255,255,255,.18);background:rgba(0,0,0,.58);border-radius:999px;font-size:.78rem;white-space:nowrap;color:#d6deea}.weightReadout{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}.weightReadout div{padding:14px;border:1px solid #29384b;border-radius:8px;background:#141e2b}.weightReadout span{display:block;color:#90a0b2;font-size:.76rem}.weightReadout b{display:block;font-size:1.3rem;margin-top:4px}@media(max-width:900px){.worldGrid{grid-template-columns:repeat(3,1fr)}.weightControls{grid-template-columns:1fr}}@media(max-width:600px){.worldGrid{grid-template-columns:repeat(2,1fr)}.weightReadout{grid-template-columns:1fr}.spaceView{min-height:320px}.spaceModal{padding:8px}.spaceModalCard{padding:14px}}';
+    document.head.appendChild(style);
+  }
+  function addGame(){
+    if(document.getElementById('weighSpaceSection'))return;
+    addGameStyles();
+    const anchor=document.querySelector('.spaceGallery')?.parentElement;if(!anchor)return;
+    const sec=document.createElement('section');sec.className='section';sec.id='weighSpaceSection';
+    sec.innerHTML='<div class="sectionHead"><div><h2>Weigh in Space</h2><p>Enter an Earth weight, choose a world, and see how gravity changes it. Click a world for a first-person look-around simulation.</p></div></div><div class="spaceGamePanel"><div class="weightControls"><label>Your Earth weight (lb)<input id="spaceWeight" type="number" min="1" max="1000" step="0.1" value="120"></label><div class="small">Weight here = Earth weight × surface gravity. Gas and ice giants use an atmospheric simulation because they do not have a solid surface to stand on.</div></div><div class="worldGrid" id="worldGrid"></div></div>';
+    anchor.after(sec);
+    document.body.insertAdjacentHTML('beforeend','<div class="spaceModal" id="spaceGameModal" aria-hidden="true"><div class="spaceModalCard"><div class="spaceModalTop"><div><div class="eyebrow">Weigh in Space</div><h2 id="spaceWorldTitle">World</h2><p id="spaceWorldMeta" class="small">Look around • No movement</p></div><button class="secondary" onclick="closeSpaceGame()">Close</button></div><div class="spaceView" id="spaceView"><div class="spaceStars"></div><div class="spaceHorizon" id="spaceHorizon"></div><div class="lookHint">Drag to look around • You cannot move</div></div><div class="weightReadout"><div><span>Your Earth weight</span><b id="earthWeightReadout">120 lb</b></div><div><span>Weight here</span><b id="worldWeightReadout">—</b></div><div><span>Gravity</span><b id="gravityReadout">—</b></div></div></div></div>');
+    document.getElementById('spaceWeight')?.addEventListener('input',renderWorlds);
+    renderWorlds();
+    wireLook();
+  }
+  function renderWorlds(){
+    const input=document.getElementById('spaceWeight'),earth=Math.max(1,Number(input?.value)||120),grid=document.getElementById('worldGrid');if(!grid)return;
+    grid.innerHTML=worlds.map((w,i)=>'<button class="worldCard" onclick="openSpaceGame('+i+')"><span class="worldType">'+w.type+'</span><strong>'+w.name+'</strong><span class="worldWeight">'+(earth*w.gravity).toFixed(1)+' lb</span><small>'+w.gravity.toFixed(2)+'× Earth gravity</small></button>').join('');
+  }
+  function wireLook(){
+    const scene=document.getElementById('spaceView');if(!scene||scene.dataset.wired)return;scene.dataset.wired='1';
+    let drag=false,sx=0,sy=0,px=50,py=50;
+    const move=(x,y)=>{px=Math.max(0,Math.min(100,px-(x-sx)/7));py=Math.max(20,Math.min(80,py-(y-sy)/7));sx=x;sy=y;const h=document.getElementById('spaceHorizon');if(h)h.style.backgroundPosition=px+'% '+py+'%'};
+    scene.addEventListener('pointerdown',e=>{drag=true;sx=e.clientX;sy=e.clientY;scene.setPointerCapture?.(e.pointerId)});
+    scene.addEventListener('pointermove',e=>{if(drag)move(e.clientX,e.clientY)});
+    scene.addEventListener('pointerup',()=>drag=false);scene.addEventListener('pointercancel',()=>drag=false);
+  }
+  window.openSpaceGame=function(i){
+    if(!fullyUnlocked()){alert('Complete all 18 lessons and answer all 36 lesson questions to unlock Weigh in Space.');return}
+    addGame();wireLook();
+    const earth=Math.max(1,Number(document.getElementById('spaceWeight')?.value)||120),w=worlds[i]||worlds[2],modal=document.getElementById('spaceGameModal'),h=document.getElementById('spaceHorizon');
+    document.getElementById('spaceWorldTitle').textContent=w.name;
+    document.getElementById('spaceWorldMeta').textContent=w.type+' • Look around only • No movement';
+    document.getElementById('earthWeightReadout').textContent=earth.toFixed(1)+' lb';
+    document.getElementById('worldWeightReadout').textContent=(earth*w.gravity).toFixed(1)+' lb';
+    document.getElementById('gravityReadout').textContent=w.gravity.toFixed(2)+'× Earth';
+    h.style.backgroundImage=sceneStyles[w.scene];h.style.backgroundPosition='50% 50%';
+    modal.classList.add('open');modal.setAttribute('aria-hidden','false');
+  };
+  window.closeSpaceGame=function(){const modal=document.getElementById('spaceGameModal');if(modal){modal.classList.remove('open');modal.setAttribute('aria-hidden','true')}};
+  window.unlockSpaceGame=function(){if(fullyUnlocked()){addGame();wireLook()}};
+  document.querySelectorAll('.filter').forEach(b=>b.addEventListener('click',()=>setTimeout(syncLessonCards,0)));
+  setTimeout(syncLessonCards,100);
+  if(fullyUnlocked())setTimeout(unlockSpaceGame,150);
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSpaceGame()});
+})();
+</script>
