@@ -1,0 +1,65 @@
+name: Repair Science Lab
+on:
+  push:
+    branches: [science-lab-6]
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Repair HTML structure and navigation safety
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('science-lab-6/index.html')
+          s=p.read_text(encoding='utf-8')
+          # Close accidentally nested style blocks.
+          while True:
+              a=s.find('<style>')
+              if a<0: break
+              b=s.find('</style>',a)
+              c=s.find('<style>',a+7)
+              if c>=0 and (b<0 or c<b):
+                  s=s[:c]+'</style>'+s[c:]
+                  continue
+              # Continue scanning after this valid block.
+              if b<0: break
+              tail=s[b+8:]
+              if '<style>' not in tail: break
+              s=s[:b+8]+tail
+              # restart from the next style block
+              a=s.find('<style>',b+8)
+              if a<0: break
+              # normalize only if it contains another style before its close
+              while True:
+                  b2=s.find('</style>',a+7); c2=s.find('<style>',a+7)
+                  if c2>=0 and (b2<0 or c2<b2):
+                      s=s[:c2]+'</style>'+s[c2:]
+                      continue
+                  break
+              break
+          # Keep style blocks inside <head>, not after it.
+          s=s.replace('</head>\n<style>', '<style>', 1)
+          marker='</style>\n<body>'
+          if '</head>\n<style>' not in s and marker in s:
+              # The loader style was the last style block before body after a moved head.
+              s=s.replace(marker, '</style></head>\n<body>', 1)
+          # Make the home page authoritative: lesson cards only render on the lessons route.
+          s=s.replace("if(homeLessons)homeLessons.classList.add('homeHiddenLessons');", "if(homeLessons && !new URLSearchParams(location.search).has('page'))homeLessons.remove();")
+          # Make the main Open Lessons/hero CTA use the real route instead of scrolling.
+          s=s.replace("onclick=\"goId('proCurriculum')\"", "onclick=\"location.href=location.pathname+'?page=lessons'\"")
+          s=s.replace("onclick=\"goId('lessons')\"", "onclick=\"location.href=location.pathname+'?page=lessons'\"")
+          # Prevent browser history from returning to a stale stacked lesson state.
+          s=s.replace("onclick=\"history.back()\"", "onclick=\"location.href=location.pathname+'?page=lessons'\"")
+          p.write_text(s,encoding='utf-8')
+          PY
+      - name: Commit repair and remove temporary workflow
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          rm -f .github/workflows/repair-science-lab.yml
+          git add science-lab-6/index.html .github/workflows/repair-science-lab.yml
+          git commit -m 'Harden Science Lab navigation and HTML' || exit 0
+          git push
